@@ -1,0 +1,6 @@
+@EV_Station.Api_HostAddress = http://localhost:8080
+
+GET {{EV_Station.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
