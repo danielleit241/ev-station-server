@@ -1,13 +1,16 @@
+using EV_Station.Api.Abstractions;
+using EV_Station.Api.Extensions;
+using EV_Station.Api.Middelwares;
+using EV_Station.Infrastructure.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.AddApplicationServices();
+builder.AddDependencyInjection();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -16,9 +19,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.Run();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+using (var scope = app.Services.CreateScope())
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    var context = scope.ServiceProvider.GetRequiredService<EVStationDbContext>();
+    context.Database.Migrate();
+
+    var endpointDefinitions = scope.ServiceProvider.GetServices<IEndpointDefinition>();
+    foreach (var endpoint in endpointDefinitions)
+    {
+        endpoint.RegisterEndpoints(app);
+    }
 }
+
+app.Run();

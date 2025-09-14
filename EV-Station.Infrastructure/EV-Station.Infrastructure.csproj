@@ -7,4 +7,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.20" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EV-Station.Application\EV-Station.Application.csproj" />
+    <ProjectReference Include="..\EV-Station.Domain\EV-Station.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
