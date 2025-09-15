@@ -19,7 +19,6 @@ namespace EV_Station.Api.Endpoints.Auth
             v1.MapPost("register", RegisterUserAsync).WithName("RegisterUser");
             v1.MapPost("login", LoginUserAsync).WithName("LoginUser");
             v1.MapPost("google-login", GoogleLoginAsync).WithName("GoogleLoginUser");
-
         }
 
         private async Task GoogleLoginAsync(HttpContext context)
@@ -27,9 +26,12 @@ namespace EV_Station.Api.Endpoints.Auth
             throw new NotImplementedException();
         }
 
-        private async Task LoginUserAsync(HttpContext context)
+        private async Task<Results<Ok<GenericApiResponse<UserTokensReponse>>, NotFound>> LoginUserAsync(LoginUserDto dto, IMediator mediator)
         {
-            throw new NotImplementedException();
+            var loginUserCommand = new LoginUser(dto);
+            var result = await mediator.Send(loginUserCommand);
+
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> RegisterUserAsync(RegisterUserDto dto, IMediator mediator)

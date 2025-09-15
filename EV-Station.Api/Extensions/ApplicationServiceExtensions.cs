@@ -9,7 +9,6 @@ using EV_Station.Infrastructure.Repositories;
 using EV_Station.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
 
@@ -21,24 +20,7 @@ namespace EV_Station.Api.Extensions
         {
             builder.Services.AddEndpointsApiExplorer();
 
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.DocInclusionPredicate((docName, apiDesc) =>
-                {
-                    if (!apiDesc.TryGetMethodInfo(out var methodInfo)) return false;
-                    var versions = methodInfo.DeclaringType?
-                        .GetCustomAttributes(true)
-                        .OfType<ApiVersionAttribute>()
-                        .SelectMany(attr => attr.Versions);
-                    return versions?.Any(v => $"v{v.ToString()}" == docName) ?? false;
-                });
-
-                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-                {
-                    Title = "EV Station API",
-                    Version = "v1"
-                });
-            });
+            builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<EVStationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

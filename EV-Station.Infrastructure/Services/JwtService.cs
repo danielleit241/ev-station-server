@@ -16,12 +16,11 @@ namespace EV_Station.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateAccessTokenToken(User user)
         {
             var claims = GetClaims(user);
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("Jwt:Key"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpiresMinutes"] ?? "60")); ;
+            var creds = GetCredentials();
+            var expires = GetExpries();
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -46,5 +45,16 @@ namespace EV_Station.Infrastructure.Services
                 };
             return claims;
         }
+
+        private SigningCredentials GetCredentials()
+        {
+            var secretKey = _configuration["Jwt:Key"];
+            if (string.IsNullOrWhiteSpace(secretKey) || secretKey.Length < 16)
+                throw new ArgumentException("JWT secret key must be at least 16 characters.");
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
+
+            return new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        }
+        private DateTime GetExpries() => DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpiresMinutes"] ?? "30"));
     }
 }

@@ -30,6 +30,7 @@ namespace EV_Station.Application.Users.CommandHandlers
 
             var user = _mapper.Map<User>(request.dto);
             user.Id = Guid.NewGuid();
+            user.Email = request.dto.Email.ToLower().Trim();
             user.PasswordHash = HashPassword(request.dto.Password);
             user.RoleId = await GetRoleIdByNameAsync("Renter", cancellationToken);
             user.ProviderId = await GetProviderIdByNameAsync("Local", cancellationToken);
