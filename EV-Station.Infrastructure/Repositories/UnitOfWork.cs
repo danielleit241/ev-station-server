@@ -9,9 +9,20 @@ namespace EV_Station.Infrastructure.Repositories
         private readonly EVStationDbContext _context;
         private readonly Dictionary<Type, object> _repositories = new();
         private IDbContextTransaction? _transaction;
+
+        private IUserRepository _userRepository;
+
         public UnitOfWork(EVStationDbContext context)
         {
             _context = context;
+        }
+
+        public IUserRepository Users
+        {
+            get
+            {
+                return _userRepository ??= new UserRepository(_context);
+            }
         }
 
         public void Dispose() => _context.Dispose();

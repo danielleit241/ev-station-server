@@ -5,6 +5,6 @@
         string Email,
         string FullName,
         string AvatarUrl,
-        string Role
+        string RoleName
     );
 }

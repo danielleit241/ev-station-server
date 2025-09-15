@@ -7,7 +7,7 @@ namespace EV_Station.Infrastructure.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly EVStationDbContext _context;
-        private readonly DbSet<T> _dbSet;
+        protected readonly DbSet<T> _dbSet;
         public GenericRepository(EVStationDbContext context)
         {
             _context = context;

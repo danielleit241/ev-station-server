@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApplicationServices();
 builder.AddDependencyInjection();
+builder.RegisterEndpointDefinitions(typeof(Program).Assembly);
 
 var app = builder.Build();
 
