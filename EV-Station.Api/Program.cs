@@ -2,7 +2,6 @@ using EV_Station.Api.Abstractions;
 using EV_Station.Api.Extensions;
 using EV_Station.Api.Middelwares;
 using EV_Station.Infrastructure.Persistence.Data;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +22,7 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<EVStationDbContext>();
-    context.Database.Migrate();
+    await scope.ServiceProvider.GetRequiredService<DatabaseSeeder>().SeedData();
 
     var endpointDefinitions = scope.ServiceProvider.GetServices<IEndpointDefinition>();
     foreach (var endpoint in endpointDefinitions)

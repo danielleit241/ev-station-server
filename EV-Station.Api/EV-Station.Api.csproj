@@ -24,8 +24,4 @@
     <ProjectReference Include="..\EV-Station.Infrastructure\EV-Station.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Endpoints\" />
-  </ItemGroup>
-
 </Project>

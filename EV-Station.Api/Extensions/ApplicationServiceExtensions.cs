@@ -1,7 +1,9 @@
 ﻿using EV_Station.Api.Abstractions;
 using EV_Station.Application.Common.Abstractions.IRepositories;
+using EV_Station.Application.Common.Abstractions.IServices;
 using EV_Station.Infrastructure.Persistence.Data;
 using EV_Station.Infrastructure.Repositories;
+using EV_Station.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -20,15 +22,6 @@ namespace EV_Station.Api.Extensions
             return builder;
         }
 
-        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-
-            return builder;
-        }
-
         public static void RegisterEndpointDefinitions(this IHostApplicationBuilder builder, Assembly assembly)
         {
             var types = assembly.ExportedTypes
@@ -38,6 +31,17 @@ namespace EV_Station.Api.Extensions
             {
                 builder.Services.AddScoped(typeof(IEndpointDefinition), type);
             }
+        }
+
+        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<DatabaseSeeder>();
+
+
+            return builder;
         }
     }
 }
