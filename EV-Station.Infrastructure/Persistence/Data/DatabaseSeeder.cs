@@ -23,11 +23,8 @@ namespace EV_Station.Infrastructure.Persistence.Data
         {
             try
             {
-                if (await _context.Database.CanConnectAsync())
-                {
-                    await _context.Database.MigrateAsync();
-                    _logger.LogInformation("Create database");
-                }
+                await _context.Database.MigrateAsync();
+                _logger.LogInformation("Create database");
 
                 await SeedRolesAsync();
                 await SeedProviderAsync();
