@@ -1,3 +1,4 @@
+using Asp.Versioning.ApiExplorer;
 using EV_Station.Api.Abstractions;
 using EV_Station.Api.Extensions;
 using EV_Station.Api.Middlewares;
@@ -14,7 +15,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+        }
+    });
 }
 
 app.UseHttpsRedirection();
