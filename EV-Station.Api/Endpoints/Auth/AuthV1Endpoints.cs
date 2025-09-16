@@ -1,6 +1,6 @@
 ﻿namespace EV_Station.Api.Endpoints.Auth
 {
-    public class AuthEndpoints : IEndpointDefinition
+    public class AuthV1Endpoints : IEndpointDefinition
     {
 
         public void RegisterEndpoints(WebApplication application)
