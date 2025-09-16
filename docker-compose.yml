@@ -1,0 +1,47 @@
+services:
+  ev-station.api:
+    image: ${DOCKER_REGISTRY-}evstationapi
+    build:
+      context: .
+      dockerfile: EV-Station.Api/Dockerfile
+    container_name: ev-station-backend
+    ports:
+     - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - ConnectionStrings__DefaultConnection=${DEFAULT_CONNECTION}
+      - Authentication__Google__ClientId=${Authentication__Google__ClientId}
+      - Authentication__Google__ClientIdPlayGround=${Authentication__Google__ClientIdPlayGround}
+      - Authentication__Jwt__Key=${Authentication__Jwt__Key}
+      - Authentication__Jwt__Issuer=${Authentication__Jwt__Issuer}
+      - Authentication__Jwt__Audience=${Authentication__Jwt__Audience}
+      - Authentication__Jwt__ExpiresMinutes=${Authentication__Jwt__ExpiresMinutes}
+    depends_on:
+      - sqlserver
+    networks:
+      - ev-station-network
+    restart: on-failure
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: ev-station-sqlserver-database
+    env_file:
+      - .env
+    user: root
+    environment:
+      SA_PASSWORD: "YourStrong@Passw0rd123!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+    networks:
+      - ev-station-network
+
+networks:
+  ev-station-network:
+    driver: bridge
+
+volumes:
+  sqlserverdata:
