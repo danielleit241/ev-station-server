@@ -9,11 +9,26 @@
             AddDbContext(builder);
             AddApiVersioning(builder);
             AddAuthentication(builder);
+            AddCors(builder);
 
             builder.Services.AddMediatR(typeof(RegisterUser));
             builder.Services.AddAutoMapper(typeof(UserProfile));
 
             return builder;
+        }
+
+        private static void AddCors(IHostApplicationBuilder builder)
+        {
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllClients", builder =>
+                {
+                    builder.SetIsOriginAllowed(_ => true)
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                });
+            });
         }
 
         private static void AddSwagger(IHostApplicationBuilder builder)
