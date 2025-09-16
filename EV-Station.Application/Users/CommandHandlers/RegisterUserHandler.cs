@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EV_Station.Application.Common.Abstractions.IRepositories;
+using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 using EV_Station.Application.Common.Responses;
 using EV_Station.Application.Users.Commands;
 using EV_Station.Application.Users.DTOs.Response;

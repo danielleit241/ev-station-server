@@ -1,27 +1,23 @@
-﻿using Asp.Versioning;
-using EV_Station.Api.Abstractions;
-using EV_Station.Application.Common.Abstractions.IRepositories;
-using EV_Station.Application.Common.Abstractions.IServices;
-using EV_Station.Application.Common.Mappings;
-using EV_Station.Application.Users.Commands;
-using EV_Station.Infrastructure.Persistence.Data;
-using EV_Station.Infrastructure.Repositories;
-using EV_Station.Infrastructure.Services;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-
-namespace EV_Station.Api.Extensions
+﻿namespace EV_Station.Api.Extensions
 {
     public static class ApplicationServiceExtensions
     {
         public static IHostApplicationBuilder AddApplicationServices(this IHostApplicationBuilder builder)
         {
             builder.Services.AddEndpointsApiExplorer();
+            AddSwagger(builder);
+            AddDbContext(builder);
+            AddApiVersioning(builder);
+            AddAuthentication(builder);
 
+            builder.Services.AddMediatR(typeof(RegisterUser));
+            builder.Services.AddAutoMapper(typeof(UserProfile));
+
+            return builder;
+        }
+
+        private static void AddSwagger(IHostApplicationBuilder builder)
+        {
             builder.Services.AddSwaggerGen(options =>
             {
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -35,37 +31,45 @@ namespace EV_Station.Api.Extensions
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
-                         new OpenApiSecurityScheme
-                         {
+                        new OpenApiSecurityScheme
+                        {
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
                                 Id = "Bearer"
                             }
-                         },
-                         Array.Empty<string>()
-                     }
+                        },
+                        Array.Empty<string>()
+                    }
                 });
             });
+        }
 
+        private static void AddDbContext(IHostApplicationBuilder builder)
+        {
             builder.Services.AddDbContext<EVStationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        }
 
+        private static void AddApiVersioning(IHostApplicationBuilder builder)
+        {
             builder.Services.AddApiVersioning(options =>
-                {
-                    options.ReportApiVersions = true;
-                    options.ApiVersionReader = ApiVersionReader.Combine(
-                        new UrlSegmentApiVersionReader(),
-                        new HeaderApiVersionReader("X-Version")
-                        );
-                }
-                )
-                .AddApiExplorer(options =>
-                {
-                    options.GroupNameFormat = "'v'VVV";
-                    options.SubstituteApiVersionInUrl = true;
-                });
+            {
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                    new UrlSegmentApiVersionReader(),
+                    new HeaderApiVersionReader("X-Version")
+                );
+            })
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+        }
 
+        private static void AddAuthentication(IHostApplicationBuilder builder)
+        {
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(o =>
                 {
@@ -78,16 +82,10 @@ namespace EV_Station.Api.Extensions
                         ValidIssuer = builder.Configuration["Authentication:Jwt:Issuer"],
                         ValidAudience = builder.Configuration["Authentication:Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(
-                                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Authentication:Jwt:Key"]!)
-                                )
+                            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Authentication:Jwt:Key"]!)
+                        )
                     };
                 });
-
-            builder.Services.AddMediatR(typeof(RegisterUser));
-
-            builder.Services.AddAutoMapper(typeof(UserProfile));
-
-            return builder;
         }
 
         public static void RegisterEndpointDefinitions(this IHostApplicationBuilder builder, Assembly assembly)
@@ -110,7 +108,6 @@ namespace EV_Station.Api.Extensions
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
-
 
             return builder;
         }

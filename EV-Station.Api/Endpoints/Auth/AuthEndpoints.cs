@@ -1,13 +1,4 @@
-﻿using Asp.Versioning.Conventions;
-using EV_Station.Api.Abstractions;
-using EV_Station.Application.Common.Responses;
-using EV_Station.Application.Users.Commands;
-using EV_Station.Application.Users.DTOs.Requests;
-using EV_Station.Application.Users.DTOs.Response;
-using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
-
-namespace EV_Station.Api.Endpoints.Auth
+﻿namespace EV_Station.Api.Endpoints.Auth
 {
     public class AuthEndpoints : IEndpointDefinition
     {

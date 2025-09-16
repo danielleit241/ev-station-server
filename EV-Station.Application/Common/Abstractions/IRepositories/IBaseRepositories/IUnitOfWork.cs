@@ -1,4 +1,4 @@
-﻿namespace EV_Station.Application.Common.Abstractions.IRepositories
+﻿namespace EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories
 {
     public interface IUnitOfWork : IDisposable
     {

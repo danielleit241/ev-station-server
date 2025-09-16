@@ -1,4 +1,5 @@
-﻿using EV_Station.Domain.Models;
+﻿using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
+using EV_Station.Domain.Models;
 
 namespace EV_Station.Application.Common.Abstractions.IRepositories
 {

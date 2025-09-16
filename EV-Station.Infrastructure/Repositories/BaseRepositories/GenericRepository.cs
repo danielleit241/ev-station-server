@@ -1,8 +1,8 @@
-﻿using EV_Station.Application.Common.Abstractions.IRepositories;
+﻿using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 using EV_Station.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace EV_Station.Infrastructure.Repositories
+namespace EV_Station.Infrastructure.Repositories.BaseRepositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
