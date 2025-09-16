@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 
-namespace EV_Station.Api.Middelwares
+namespace EV_Station.Api.Middlewares
 {
     public class GlobalExceptionMiddleware
     {

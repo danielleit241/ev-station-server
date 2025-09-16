@@ -8,8 +8,11 @@ using EV_Station.Infrastructure.Persistence.Data;
 using EV_Station.Infrastructure.Repositories;
 using EV_Station.Infrastructure.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+
 
 
 namespace EV_Station.Api.Extensions
@@ -36,6 +39,23 @@ namespace EV_Station.Api.Extensions
                 }
             );
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(o =>
+                {
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["Authentication:Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Authentication:Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Authentication:Jwt:Key"]!)
+                                )
+                    };
+                });
+
             builder.Services.AddMediatR(typeof(RegisterUser));
 
             builder.Services.AddAutoMapper(typeof(UserProfile));
@@ -61,6 +81,8 @@ namespace EV_Station.Api.Extensions
             builder.Services.AddScoped<IJwtService, JwtService>();
             builder.Services.AddScoped<DatabaseSeeder>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+            builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
 
 
             return builder;

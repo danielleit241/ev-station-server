@@ -22,38 +22,44 @@ namespace EV_Station.Application.Users.CommandHandlers
 
         public async Task<GenericApiResponse<UserResponseDto>> Handle(RegisterUser request, CancellationToken cancellationToken)
         {
-            var userRepo = _uow.Users;
-            if (await userRepo.IsEmailExist(request.dto.Email))
+            await _uow.BeginTransactionAsync();
+            try
             {
-                return GenericApiResponse<UserResponseDto>.FailResponse("Email is already in use.");
+                var userRepo = _uow.Users;
+                if (await userRepo.IsEmailExist(request.dto.Email))
+                {
+                    return GenericApiResponse<UserResponseDto>.FailResponse("Email is already in use.");
+                }
+
+                var user = await GetRegisterUserAsync(request);
+                await userRepo.AddAsync(user);
+                var userResponse = _mapper.Map<UserResponseDto>(user);
+
+
+                await _uow.SaveChangesAsync(cancellationToken);
+                await _uow.CommitAsync();
+                return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Register user successfully");
             }
+            catch (Exception ex)
+            {
+                await _uow.RollbackAsync();
+                return GenericApiResponse<UserResponseDto>.FailResponse($"Register user failed. Error: {ex.Message}");
+            }
+        }
+
+        private async Task<User> GetRegisterUserAsync(RegisterUser request)
+        {
+            var role = await _uow.Roles.GetRoleByName("Renter");
+            var provider = await _uow.Providers.GetProviderByName("Local");
 
             var user = _mapper.Map<User>(request.dto);
             user.Id = Guid.NewGuid();
             user.Email = request.dto.Email.ToLower().Trim();
             user.PasswordHash = HashPassword(request.dto.Password);
-            user.RoleId = await GetRoleIdByNameAsync("Renter", cancellationToken);
-            user.ProviderId = await GetProviderIdByNameAsync("Local", cancellationToken);
+            user.RoleId = role!.Id;
+            user.ProviderId = provider!.Id;
 
-            await userRepo.AddAsync(user);
-            await _uow.SaveChangesAsync(cancellationToken);
-
-            var userResponse = _mapper.Map<UserResponseDto>(user);
-            return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Register user successfully");
-        }
-
-        private async Task<int> GetRoleIdByNameAsync(string roleName, CancellationToken cancellationToken)
-        {
-            var roleRepo = _uow.Repository<Role>();
-            var roles = await roleRepo.GetAllAsync();
-            return roles.FirstOrDefault(r => r.Name == roleName)?.Id ?? roles.First().Id;
-        }
-
-        private async Task<int> GetProviderIdByNameAsync(string providerName, CancellationToken cancellationToken)
-        {
-            var providerRepo = _uow.Repository<Provider>();
-            var providers = await providerRepo.GetAllAsync();
-            return providers.FirstOrDefault(p => p.Name == providerName)?.Id ?? providers.First().Id;
+            return user;
         }
 
         public static string HashPassword(string password)

@@ -4,7 +4,7 @@ namespace EV_Station.Application.Common.Abstractions.IRepositories
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        Task<User?> GetByEmail(string email);
+        Task<User> GetByEmail(string email);
         Task<bool> IsEmailExist(string email);
     }
 }

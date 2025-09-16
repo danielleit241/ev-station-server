@@ -11,9 +11,9 @@ namespace EV_Station.Infrastructure.Repositories
         {
         }
 
-        public async Task<User?> GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
-            return await _dbSet.Include(r => r.Role).FirstOrDefaultAsync(u => u.Email == email.ToLower().Trim());
+            return await _dbSet.Include(r => r.Role).FirstAsync(u => u.Email == email.ToLower().Trim());
         }
 
         public async Task<bool> IsEmailExist(string email) => await _dbSet.AnyAsync(u => u.Email == email.ToLower().Trim());

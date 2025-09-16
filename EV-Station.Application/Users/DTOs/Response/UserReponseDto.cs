@@ -3,8 +3,8 @@
     public record UserResponseDto(
         Guid Id,
         string Email,
-        string FullName,
-        string AvatarUrl,
+        string? FullName,
+        string? AvatarUrl,
         string RoleName
     );
 }

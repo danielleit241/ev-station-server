@@ -5,5 +5,5 @@ using MediatR;
 
 namespace EV_Station.Application.Users.Commands
 {
-    public record GoogleLoginUser(GoogleLoginDto request) : IRequest<GenericApiResponse<UserTokensReponse>>;
+    public record GoogleLoginUser(GoogleLoginDto dto) : IRequest<GenericApiResponse<UserTokensReponse>>;
 }

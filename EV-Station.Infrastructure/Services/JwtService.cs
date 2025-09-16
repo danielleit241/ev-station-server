@@ -24,8 +24,8 @@ namespace EV_Station.Infrastructure.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"],
+                Issuer = _configuration["Authentication:Jwt:Issuer"],
+                Audience = _configuration["Authentication:Jwt:Audience"],
                 Subject = new ClaimsIdentity(claims),
                 Expires = expires,
                 SigningCredentials = creds
@@ -40,7 +40,6 @@ namespace EV_Station.Infrastructure.Services
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.FullName),
                     new Claim(ClaimTypes.Role, user.Role.Name)
                 };
             return claims;
@@ -48,13 +47,13 @@ namespace EV_Station.Infrastructure.Services
 
         private SigningCredentials GetCredentials()
         {
-            var secretKey = _configuration["Jwt:Key"];
+            var secretKey = _configuration["Authentication:Jwt:Key"];
             if (string.IsNullOrWhiteSpace(secretKey) || secretKey.Length < 16)
                 throw new ArgumentException("JWT secret key must be at least 16 characters.");
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
             return new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         }
-        private DateTime GetExpries() => DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpiresMinutes"] ?? "30"));
+        private DateTime GetExpries() => DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Authentication:Jwt:ExpiresMinutes"] ?? "30"));
     }
 }

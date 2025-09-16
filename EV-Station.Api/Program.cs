@@ -1,6 +1,6 @@
 using EV_Station.Api.Abstractions;
 using EV_Station.Api.Extensions;
-using EV_Station.Api.Middelwares;
+using EV_Station.Api.Middlewares;
 using EV_Station.Infrastructure.Persistence.Data;
 
 var builder = WebApplication.CreateBuilder(args);

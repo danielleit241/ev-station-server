@@ -2,7 +2,6 @@
 {
     public record RegisterUserDto(
         string Email,
-        string Password,
-        string RoleName = "Renter"
+        string Password
     );
 }

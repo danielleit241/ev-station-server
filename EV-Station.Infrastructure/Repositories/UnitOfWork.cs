@@ -11,6 +11,8 @@ namespace EV_Station.Infrastructure.Repositories
         private IDbContextTransaction? _transaction;
 
         private IUserRepository _userRepository;
+        private IRoleRepository _roleRepository;
+        private IProviderRepository _providerRepository;
 
         public UnitOfWork(EVStationDbContext context)
         {
@@ -25,7 +27,21 @@ namespace EV_Station.Infrastructure.Repositories
             }
         }
 
-        public void Dispose() => _context.Dispose();
+        public IRoleRepository Roles
+        {
+            get
+            {
+                return _roleRepository ??= new RoleRepository(_context);
+            }
+        }
+
+        public IProviderRepository Providers
+        {
+            get
+            {
+                return _providerRepository ??= new ProviderRepository(_context);
+            }
+        }
 
         public IGenericRepository<T> Repository<T>() where T : class
         {
@@ -42,7 +58,7 @@ namespace EV_Station.Infrastructure.Repositories
 
         public async Task BeginTransactionAsync()
         {
-            _transaction ??= await _context.Database.BeginTransactionAsync();
+            _transaction = await _context.Database.BeginTransactionAsync();
         }
 
         public async Task CommitAsync()
@@ -63,6 +79,12 @@ namespace EV_Station.Infrastructure.Repositories
                 await _transaction.DisposeAsync();
                 _transaction = null;
             }
+        }
+
+        public void Dispose()
+        {
+            _transaction?.Dispose();
+            _context?.Dispose();
         }
     }
 }
