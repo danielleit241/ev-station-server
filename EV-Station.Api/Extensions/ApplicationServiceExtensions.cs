@@ -1,4 +1,6 @@
-﻿namespace EV_Station.Api.Extensions
+﻿using EV_Station.Application.Users.Commands.AuthCommands;
+
+namespace EV_Station.Api.Extensions
 {
     public static class ApplicationServiceExtensions
     {

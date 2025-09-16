@@ -3,7 +3,7 @@ using EV_Station.Application.Users.DTOs.Requests;
 using EV_Station.Application.Users.DTOs.Response;
 using MediatR;
 
-namespace EV_Station.Application.Users.Commands
+namespace EV_Station.Application.Users.Commands.AuthCommands
 {
-    public record LoginUser(LoginUserDto dto) : IRequest<GenericApiResponse<UserTokensReponse>>;
+    public record RegisterUser(RegisterUserDto dto) : IRequest<GenericApiResponse<UserResponseDto>>;
 }

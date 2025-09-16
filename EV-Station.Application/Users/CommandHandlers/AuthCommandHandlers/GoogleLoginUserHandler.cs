@@ -2,14 +2,14 @@
 using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 using EV_Station.Application.Common.Abstractions.IServices;
 using EV_Station.Application.Common.Responses;
-using EV_Station.Application.Users.Commands;
+using EV_Station.Application.Users.Commands.AuthCommands;
 using EV_Station.Application.Users.DTOs.Response;
 using EV_Station.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
-namespace EV_Station.Application.Users.CommandHandlers
+namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
 {
 
     public class GoogleLoginUserHandler : IRequestHandler<GoogleLoginUser, GenericApiResponse<UserTokensReponse>>
