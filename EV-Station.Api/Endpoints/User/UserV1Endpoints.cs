@@ -13,6 +13,14 @@ namespace EV_Station.Api.Endpoints.User
             v1.MapGet("", GetAllUsersAsync).WithName("GetAllUsers");
             v1.MapGet("/{id:guid}", GetUserByIdAsync).WithName("GetUserById");
             v1.MapPost("", CreateUserAsync).WithName("CreateUser");
+            v1.MapDelete("/{id:guid}", DeleteUserAsync).WithName("DeleteUser");
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> DeleteUserAsync(Guid id, IMediator mediator)
+        {
+            var deleteUserCommand = new DeleteUserById(id);
+            var result = await mediator.Send(deleteUserCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> CreateUserAsync([FromBody] CreateUserDto request, IMediator mediator)
