@@ -5,7 +5,13 @@ namespace EV_Station.Api.Endpoints.IdentityCards
     {
         public void RegisterEndpoints(WebApplication application)
         {
-            throw new NotImplementedException();
+            var group = application.MapGroup("/api/v1/identitycards");
+
+            group.MapGet("/", () =>
+            {
+                // Ví dụ trả về danh sách IdentityCards
+                return Results.Ok(new { message = "Get all IdentityCards" });
+            });
         }
     }
 }
