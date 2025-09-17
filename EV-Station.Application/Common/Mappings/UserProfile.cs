@@ -17,6 +17,10 @@ namespace EV_Station.Application.Common.Mappings
 
             CreateMap<GoogleLoginDto, User>()
                 .ForMember(d => d.PasswordHash, otp => otp.Ignore());
+
+            CreateMap<CreateUserDto, User>()
+                .ForMember(d => d.PasswordHash, otp => otp.Ignore());
+
         }
     }
 }
