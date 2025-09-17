@@ -14,6 +14,14 @@ namespace EV_Station.Api.Endpoints.User
             v1.MapGet("/{id:guid}", GetUserByIdAsync).WithName("GetUserById");
             v1.MapPost("", CreateUserAsync).WithName("CreateUser");
             v1.MapDelete("/{id:guid}", DeleteUserAsync).WithName("DeleteUser");
+            v1.MapPut("/{id:guid}", UpdateUserAsync).WithName("UpdateUser");
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> UpdateUserAsync(Guid id, [FromBody] UpdateUserDto dto, IMediator mediator)
+        {
+            var updateUserCommand = new UpdateUser(id, dto);
+            var result = await mediator.Send(updateUserCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> DeleteUserAsync(Guid id, IMediator mediator)
