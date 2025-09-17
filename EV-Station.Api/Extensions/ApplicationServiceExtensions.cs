@@ -39,7 +39,7 @@ namespace EV_Station.Api.Extensions
             {
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization: Bearer {token}",
+                    Description = "JWT Authorization: {token}",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
@@ -90,6 +90,24 @@ namespace EV_Station.Api.Extensions
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(o =>
                 {
+                    o.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var authHeader = context.Request.Headers["Authorization"].ToString();
+
+                            if (!string.IsNullOrEmpty(authHeader))
+                            {
+                                if (authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                                    context.Token = authHeader.Substring("Bearer ".Length).Trim();
+                                else
+                                    context.Token = authHeader.Trim();
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
+
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
