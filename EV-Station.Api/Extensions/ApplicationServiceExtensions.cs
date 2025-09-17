@@ -10,9 +10,9 @@ namespace EV_Station.Api.Extensions
             AddSwagger(builder);
             AddDbContext(builder);
             AddApiVersioning(builder);
-            AddAuthentication(builder);
             AddCors(builder);
-
+            AddAuthentication(builder);
+            builder.Services.AddAuthorization();
             builder.Services.AddMediatR(typeof(RegisterUser));
             builder.Services.AddAutoMapper(typeof(UserProfile));
 
@@ -121,10 +121,12 @@ namespace EV_Station.Api.Extensions
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<IPasswordService, PasswordService>();
             builder.Services.AddScoped<DatabaseSeeder>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
+
 
             return builder;
         }

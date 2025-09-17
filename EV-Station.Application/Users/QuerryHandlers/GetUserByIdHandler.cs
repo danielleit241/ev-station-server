@@ -21,7 +21,7 @@ namespace EV_Station.Application.Users.QuerryHandlers
         public async Task<GenericApiResponse<UserResponseDto>> Handle(GetUserById request, CancellationToken cancellationToken)
         {
             var user = await _uow.Users.GetByIdAsync(request.id);
-            if(user is null)
+            if (user is null)
             {
                 return GenericApiResponse<UserResponseDto>.FailResponse("User not found");
             }

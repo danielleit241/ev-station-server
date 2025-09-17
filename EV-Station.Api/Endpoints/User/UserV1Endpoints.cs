@@ -1,5 +1,6 @@
-﻿using EV_Station.Application.Common.Responses;
+﻿using EV_Station.Api.Filters.UserValidationFilters;
 using EV_Station.Application.Users.Querries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EV_Station.Api.Endpoints.User
@@ -10,9 +11,17 @@ namespace EV_Station.Api.Endpoints.User
         {
             var v1 = application.MapGroup("api/v{version:apiVersion}/users").WithApiVersionSet().HasApiVersion(1, 0);
 
-            v1.MapGet("", GetAllUsersAsync).WithName("GetAllUsers");
-            v1.MapGet("/{id:guid}", GetUserByIdAsync).WithName("GetUserById");
-            v1.MapPost("", CreateUserAsync).WithName("CreateUser");
+            v1.MapGet("", GetAllUsersAsync)
+                .WithName("GetAllUsers")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+
+            v1.MapGet("/{id:guid}", GetUserByIdAsync)
+                .WithName("GetUserById")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+
+            v1.MapPost("", CreateUserAsync).WithName("CreateUser")
+                .AddEndpointFilter<UserValidationFilter>()
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
         }
 
         private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> CreateUserAsync([FromBody] CreateUserDto request, IMediator mediator)

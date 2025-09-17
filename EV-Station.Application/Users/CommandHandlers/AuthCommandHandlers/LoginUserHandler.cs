@@ -4,9 +4,7 @@ using EV_Station.Application.Common.Abstractions.IServices;
 using EV_Station.Application.Common.Responses;
 using EV_Station.Application.Users.Commands.AuthCommands;
 using EV_Station.Application.Users.DTOs.Response;
-using EV_Station.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
 {
@@ -15,12 +13,14 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private readonly IJwtService IJwtService;
+        private readonly IPasswordService _passwordService;
 
-        public LoginUserHandler(IUnitOfWork uow, IMapper mapper, IJwtService iJwtService)
+        public LoginUserHandler(IUnitOfWork uow, IMapper mapper, IJwtService iJwtService, IPasswordService passwordService)
         {
             _uow = uow;
             _mapper = mapper;
             IJwtService = iJwtService;
+            _passwordService = passwordService;
         }
 
         public async Task<GenericApiResponse<UserTokensReponse>> Handle(LoginUser request, CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
 
             var user = await userRepo.GetByEmail(request.dto.Email);
 
-            if (!VerifyPassword(user, user!.PasswordHash, request.dto.Password))
+            if (!_passwordService.VerifyPassword(request.dto.Password, user!.PasswordHash!))
             {
                 return GenericApiResponse<UserTokensReponse>.FailResponse("Password is incorrect");
             }
@@ -47,15 +47,6 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
             };
 
             return GenericApiResponse<UserTokensReponse>.SuccessResponse(data, "Login user successfully");
-        }
-
-        private bool VerifyPassword(User user, string hashedPassword, string basePassword)
-        {
-            var hasher = new PasswordHasher<User>();
-
-            var result = hasher.VerifyHashedPassword(user, hashedPassword, basePassword);
-
-            return result == PasswordVerificationResult.Success;
         }
     }
 }
