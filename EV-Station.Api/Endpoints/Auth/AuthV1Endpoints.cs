@@ -1,4 +1,6 @@
-﻿namespace EV_Station.Api.Endpoints.Auth
+﻿using EV_Station.Application.Users.Commands.AuthCommands;
+
+namespace EV_Station.Api.Endpoints.Auth
 {
     public class AuthV1Endpoints : IEndpointDefinition
     {
