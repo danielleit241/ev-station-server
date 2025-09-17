@@ -12,5 +12,7 @@ namespace EV_Station.Infrastructure.Persistence.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Provider> Providers { get; set; }
+        public DbSet<IdentityCard> IdentityCards { get; set; }
+        public DbSet<DriverLicense> DriverLicenses { get; set; }
     }
 }
