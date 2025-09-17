@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
+using EV_Station.Application.Common.Abstractions.IServices;
 using EV_Station.Application.Common.Responses;
 using EV_Station.Application.Users.Commands.AuthCommands;
 using EV_Station.Application.Users.DTOs.Response;
 using EV_Station.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
 {
@@ -13,11 +13,13 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
+        private readonly IPasswordService _passwordService;
 
-        public RegisterUserHandler(IUnitOfWork uow, IMapper mapper)
+        public RegisterUserHandler(IUnitOfWork uow, IMapper mapper, IPasswordService passwordService)
         {
             _uow = uow;
             _mapper = mapper;
+            _passwordService = passwordService;
         }
 
         public async Task<GenericApiResponse<UserResponseDto>> Handle(RegisterUser request, CancellationToken cancellationToken)
@@ -55,17 +57,11 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
             var user = _mapper.Map<User>(request.dto);
             user.Id = Guid.NewGuid();
             user.Email = request.dto.Email.ToLower().Trim();
-            user.PasswordHash = HashPassword(request.dto.Password);
+            user.PasswordHash = _passwordService.HashPassword(request.dto.Password);
             user.RoleId = role!.Id;
             user.ProviderId = provider!.Id;
 
             return user;
-        }
-
-        public static string HashPassword(string password)
-        {
-            var hasher = new PasswordHasher<User>();
-            return hasher.HashPassword(null!, password);
         }
     }
 }

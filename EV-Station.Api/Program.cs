@@ -1,7 +1,3 @@
-using Asp.Versioning.ApiExplorer;
-using EV_Station.Api.Extensions;
-using EV_Station.Api.Middlewares;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApplicationServices();
@@ -38,5 +34,9 @@ using (var scope = app.Services.CreateScope())
         endpoint.RegisterEndpoints(app);
     }
 }
+
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

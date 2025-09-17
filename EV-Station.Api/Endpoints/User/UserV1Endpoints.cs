@@ -1,8 +1,4 @@
-﻿using EV_Station.Application.Common.Responses;
-using EV_Station.Application.Users.Querries;
-using Microsoft.AspNetCore.Mvc;
-
-namespace EV_Station.Api.Endpoints.User
+﻿namespace EV_Station.Api.Endpoints.User
 {
     public class UserEndpoints : IEndpointDefinition
     {
@@ -10,25 +6,18 @@ namespace EV_Station.Api.Endpoints.User
         {
             var v1 = application.MapGroup("api/v{version:apiVersion}/users").WithApiVersionSet().HasApiVersion(1, 0);
 
-            v1.MapGet("", GetAllUsersAsync).WithName("GetAllUsers");
-            v1.MapGet("/{id:guid}", GetUserByIdAsync).WithName("GetUserById");
-            v1.MapPost("", CreateUserAsync).WithName("CreateUser");
-            v1.MapDelete("/{id:guid}", DeleteUserAsync).WithName("DeleteUser");
-            v1.MapPut("/{id:guid}", UpdateUserAsync).WithName("UpdateUser");
-        }
+            v1.MapGet("", GetAllUsersAsync)
+                .WithName("GetAllUsers")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
 
-        private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> UpdateUserAsync(Guid id, [FromBody] UpdateUserDto dto, IMediator mediator)
-        {
-            var updateUserCommand = new UpdateUser(id, dto);
-            var result = await mediator.Send(updateUserCommand);
-            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
-        }
+            v1.MapGet("/{id:guid}", GetUserByIdAsync)
+                .WithName("GetUserById")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
 
-        private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> DeleteUserAsync(Guid id, IMediator mediator)
-        {
-            var deleteUserCommand = new DeleteUserById(id);
-            var result = await mediator.Send(deleteUserCommand);
-            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+            v1.MapPost("", CreateUserAsync)
+                .WithName("CreateUser")
+                .AddEndpointFilter<UserValidationFilter>()
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
         }
 
         private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> CreateUserAsync([FromBody] CreateUserDto request, IMediator mediator)

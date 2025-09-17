@@ -1,6 +1,4 @@
-﻿using EV_Station.Application.Users.Commands.AuthCommands;
-
-namespace EV_Station.Api.Endpoints.Auth
+﻿namespace EV_Station.Api.Endpoints.Auth
 {
     public class AuthV1Endpoints : IEndpointDefinition
     {
@@ -9,9 +7,17 @@ namespace EV_Station.Api.Endpoints.Auth
         {
             var v1 = application.MapGroup("api/v{version:apiVersion}/auth").WithApiVersionSet().HasApiVersion(1, 0);
 
-            v1.MapPost("register", RegisterUserAsync).WithName("RegisterUser");
-            v1.MapPost("login", LoginUserAsync).WithName("LoginUser");
-            v1.MapPost("google-login", GoogleLoginAsync).WithName("GoogleLoginUser");
+            v1.MapPost("register", RegisterUserAsync)
+                .WithName("RegisterUser")
+                .AddEndpointFilter<RegisterUserValidationFilter>();
+
+            v1.MapPost("login", LoginUserAsync)
+                .WithName("LoginUser")
+                .AddEndpointFilter<LoginUserValidationFilter>();
+
+            v1.MapPost("google-login", GoogleLoginAsync)
+                .WithName("GoogleLoginUser")
+                .AddEndpointFilter<GoogleLoginValidationFilter>();
         }
 
         private async Task<Results<Ok<GenericApiResponse<UserTokensReponse>>, NotFound>> GoogleLoginAsync(GoogleLoginDto dto, IMediator mediator)

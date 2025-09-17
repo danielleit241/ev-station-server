@@ -1,6 +1,4 @@
-﻿using EV_Station.Application.Users.Commands.AuthCommands;
-
-namespace EV_Station.Api.Extensions
+﻿namespace EV_Station.Api.Extensions
 {
     public static class ApplicationServiceExtensions
     {
@@ -10,9 +8,9 @@ namespace EV_Station.Api.Extensions
             AddSwagger(builder);
             AddDbContext(builder);
             AddApiVersioning(builder);
-            AddAuthentication(builder);
             AddCors(builder);
-
+            AddAuthentication(builder);
+            builder.Services.AddAuthorization();
             builder.Services.AddMediatR(typeof(RegisterUser));
             builder.Services.AddAutoMapper(typeof(UserProfile));
 
@@ -39,7 +37,7 @@ namespace EV_Station.Api.Extensions
             {
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization: Bearer {token}",
+                    Description = "JWT Authorization: {token}",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
@@ -90,6 +88,24 @@ namespace EV_Station.Api.Extensions
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(o =>
                 {
+                    o.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var authHeader = context.Request.Headers["Authorization"].ToString();
+
+                            if (!string.IsNullOrEmpty(authHeader))
+                            {
+                                if (authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                                    context.Token = authHeader.Substring("Bearer ".Length).Trim();
+                                else
+                                    context.Token = authHeader.Trim();
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
+
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -121,10 +137,12 @@ namespace EV_Station.Api.Extensions
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<IPasswordService, PasswordService>();
             builder.Services.AddScoped<DatabaseSeeder>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
+
 
             return builder;
         }
