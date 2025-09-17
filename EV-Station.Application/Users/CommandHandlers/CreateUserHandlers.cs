@@ -24,27 +24,37 @@ namespace EV_Station.Application.Users.CommandHandlers
 
         public async Task<GenericApiResponse<UserResponseDto>> Handle(CreateUser request, CancellationToken cancellationToken)
         {
-            var userRepository = _uow.Users;
-
-            if (await userRepository.IsEmailExist(request.dto.email))
+            await _uow.BeginTransactionAsync();
+            try
             {
-                return GenericApiResponse<UserResponseDto>.FailResponse("Email is already in use.");
+                var userRepository = _uow.Users;
+
+                if (await userRepository.IsEmailExist(request.dto.email))
+                {
+                    return GenericApiResponse<UserResponseDto>.FailResponse("Email is already in use.");
+                }
+
+                var role = await _uow.Roles.GetRoleByName("Renter");
+                var provider = await _uow.Providers.GetProviderByName("Local");
+                if (role is null || provider is null)
+                {
+                    return GenericApiResponse<UserResponseDto>.FailResponse("Role or Provider not found.");
+                }
+
+                var user = GetRegisterUser(request, role, provider);
+                await userRepository.AddAsync(user);
+
+                var userResponse = _mapper.Map<UserResponseDto>(user);
+
+                await _uow.SaveChangesAsync(cancellationToken);
+                await _uow.CommitAsync();
+                return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Create user successfully");
             }
-
-
-            var role = await _uow.Roles.GetRoleByName("Renter");
-            var provider = await _uow.Providers.GetProviderByName("Local");
-            if (role is null || provider is null)
+            catch (Exception ex)
             {
-                return GenericApiResponse<UserResponseDto>.FailResponse("Role or Provider not found.");
+                await _uow.RollbackAsync();
+                return GenericApiResponse<UserResponseDto>.FailResponse(ex.Message);
             }
-
-            var user = GetRegisterUser(request, role, provider);
-            await userRepository.AddAsync(user);
-            await _uow.SaveChangesAsync(cancellationToken);
-
-            var userResponse = _mapper.Map<UserResponseDto>(user);
-            return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Create user successfully");
         }
 
         private User GetRegisterUser(CreateUser request, Role role, Provider provider)

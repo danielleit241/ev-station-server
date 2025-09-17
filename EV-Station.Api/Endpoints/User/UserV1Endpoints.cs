@@ -18,7 +18,29 @@
                 .WithName("CreateUser")
                 .AddEndpointFilter<UserValidationFilter>()
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
+
+            v1.MapDelete("/{id:guid}", DeleteUserAsync)
+                .WithName("DeleteUser")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
+
+            v1.MapPut("/{id:guid}", UpdateUserAsync)
+                .WithName("UpdateUser")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
         }
+        private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> UpdateUserAsync(Guid id, [FromBody] UpdateUserDto dto, IMediator mediator)
+        {
+            var updateUserCommand = new UpdateUser(id, dto);
+            var result = await mediator.Send(updateUserCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> DeleteUserAsync(Guid id, IMediator mediator)
+        {
+            var deleteUserCommand = new DeleteUserById(id);
+            var result = await mediator.Send(deleteUserCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
 
         private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> CreateUserAsync([FromBody] CreateUserDto request, IMediator mediator)
         {
