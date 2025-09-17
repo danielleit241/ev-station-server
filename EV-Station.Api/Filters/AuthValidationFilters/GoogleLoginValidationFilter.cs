@@ -1,5 +1,4 @@
-﻿
-namespace EV_Station.Api.Filters.AuthValidationFilters
+﻿namespace EV_Station.Api.Filters.AuthValidationFilters
 {
     public class GoogleLoginValidationFilter : IEndpointFilter
     {

@@ -1,7 +1,3 @@
-using Asp.Versioning.ApiExplorer;
-using EV_Station.Api.Extensions;
-using EV_Station.Api.Middlewares;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApplicationServices();

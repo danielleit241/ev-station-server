@@ -1,7 +1,4 @@
-﻿using EV_Station.Api.Filters.AuthValidationFilters;
-using EV_Station.Application.Users.Commands.AuthCommands;
-
-namespace EV_Station.Api.Endpoints.Auth
+﻿namespace EV_Station.Api.Endpoints.Auth
 {
     public class AuthV1Endpoints : IEndpointDefinition
     {

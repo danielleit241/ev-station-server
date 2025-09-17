@@ -1,24 +1,37 @@
 ﻿global using Asp.Versioning;
+global using Asp.Versioning.ApiExplorer;
 global using Asp.Versioning.Conventions;
 global using EV_Station.Api.Abstractions;
+global using EV_Station.Api.Extensions;
+global using EV_Station.Api.Filters.AuthValidationFilters;
+global using EV_Station.Api.Filters.UserValidationFilters;
+global using EV_Station.Api.Middlewares;
 global using EV_Station.Application.Common.Abstractions.IRepositories;
 global using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 global using EV_Station.Application.Common.Abstractions.IServices;
 global using EV_Station.Application.Common.Mappings;
 global using EV_Station.Application.Common.Responses;
 global using EV_Station.Application.Users.Commands;
+global using EV_Station.Application.Users.Commands.AuthCommands;
 global using EV_Station.Application.Users.DTOs.Requests;
 global using EV_Station.Application.Users.DTOs.Response;
+global using EV_Station.Application.Users.Querries;
+global using EV_Station.Domain.Models;
 global using EV_Station.Infrastructure.Persistence.Data;
 global using EV_Station.Infrastructure.Repositories;
 global using EV_Station.Infrastructure.Repositories.BaseRepositories;
 global using EV_Station.Infrastructure.Services;
 global using MediatR;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Http.HttpResults;
+global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.IdentityModel.Tokens;
 global using Microsoft.OpenApi.Models;
 global using System.Net;
 global using System.Reflection;
 global using System.Text.Json;
+
+
+

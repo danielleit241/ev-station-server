@@ -1,9 +1,4 @@
-﻿using EV_Station.Api.Filters.UserValidationFilters;
-using EV_Station.Application.Users.Querries;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace EV_Station.Api.Endpoints.User
+﻿namespace EV_Station.Api.Endpoints.User
 {
     public class UserEndpoints : IEndpointDefinition
     {
@@ -19,7 +14,8 @@ namespace EV_Station.Api.Endpoints.User
                 .WithName("GetUserById")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
 
-            v1.MapPost("", CreateUserAsync).WithName("CreateUser")
+            v1.MapPost("", CreateUserAsync)
+                .WithName("CreateUser")
                 .AddEndpointFilter<UserValidationFilter>()
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
         }

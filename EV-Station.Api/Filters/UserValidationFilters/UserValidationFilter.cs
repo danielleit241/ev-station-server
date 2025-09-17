@@ -1,7 +1,4 @@
-﻿
-using EV_Station.Domain.Models;
-
-namespace EV_Station.Api.Filters.UserValidationFilters
+﻿namespace EV_Station.Api.Filters.UserValidationFilters
 {
     public class UserValidationFilter : IEndpointFilter
     {
