@@ -13,10 +13,10 @@ namespace EV_Station.Infrastructure.Services
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _uow;
 
-        public JwtService(IConfiguration configuration, IUnitOfWork uow)
+        public TokenService(IConfiguration configuration, IUnitOfWork uow)
         {
             _configuration = configuration;
-             _uow = uow;
+            _uow = uow;
         }
 
         public string GenerateAccessToken(User user)

@@ -45,8 +45,8 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 var data = new UserTokensReponse
                 {
                     User = _mapper.Map<UserResponseDto>(user),
-                    AccessToken = IJwtService.GenerateAccessToken(user),
-                    RefreshToken = IJwtService.GenerateAndMapRefreshToken(user),
+                    AccessToken = _tokenService.GenerateAccessToken(user),
+                    RefreshToken = _tokenService.GenerateAndMapRefreshToken(user),
                 };
 
                 await _uow.SaveChangesAsync(cancellationToken);
