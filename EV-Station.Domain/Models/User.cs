@@ -10,6 +10,8 @@ namespace EV_Station.Domain.Models
         public string? FullName { get; set; } = string.Empty;
         public string? AvatarUrl { get; set; } = string.Empty;
         public string? PasswordHash { get; set; } = string.Empty;
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
         public int ProviderId { get; set; }
         public int RoleId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

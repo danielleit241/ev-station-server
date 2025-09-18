@@ -1,4 +1,5 @@
-﻿using EV_Station.Application.Common.Abstractions.IServices;
+﻿using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
+using EV_Station.Application.Common.Abstractions.IServices;
 using EV_Station.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -10,13 +11,15 @@ namespace EV_Station.Infrastructure.Services
     public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _uow;
 
-        public JwtService(IConfiguration configuration)
+        public JwtService(IConfiguration configuration, IUnitOfWork uow)
         {
             _configuration = configuration;
+             _uow = uow;
         }
 
-        public string GenerateAccessTokenToken(User user)
+        public string GenerateAccessToken(User user)
         {
             var claims = GetClaims(user);
             var creds = GetCredentials();
@@ -32,6 +35,25 @@ namespace EV_Station.Infrastructure.Services
             };
 
             return new JwtSecurityTokenHandler().WriteToken(new JwtSecurityTokenHandler().CreateToken(tokenDescriptor));
+        }
+
+        public string GenerateAndMapRefreshToken(User user)
+        {
+            var userRepository = _uow.Users;
+
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            userRepository.Update(user);
+            return refreshToken;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         private List<Claim> GetClaims(User user)
