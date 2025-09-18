@@ -16,14 +16,14 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        private readonly IJwtService IJwtService;
+        private readonly ITokenService _tokenService;
         private readonly IConfiguration _config;
 
-        public GoogleLoginUserHandler(IUnitOfWork uow, IMapper mapper, IJwtService jwtService, IConfiguration config)
+        public GoogleLoginUserHandler(IUnitOfWork uow, IMapper mapper, ITokenService tokenService, IConfiguration config)
         {
             _uow = uow;
             _mapper = mapper;
-            IJwtService = jwtService;
+            _tokenService = tokenService;
             _config = config;
         }
 
@@ -49,7 +49,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 var data = new UserTokensReponse
                 {
                     User = _mapper.Map<UserResponseDto>(user),
-                    AccessToken = IJwtService.GenerateAccessTokenToken(user),
+                    AccessToken = _tokenService.GenerateAccessTokenToken(user),
                     RefreshToken = "Not implemented"
                 };
 

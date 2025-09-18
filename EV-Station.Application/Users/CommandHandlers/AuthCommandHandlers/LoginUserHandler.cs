@@ -12,14 +12,14 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        private readonly IJwtService IJwtService;
+        private readonly ITokenService _tokenService;
         private readonly IPasswordService _passwordService;
 
-        public LoginUserHandler(IUnitOfWork uow, IMapper mapper, IJwtService iJwtService, IPasswordService passwordService)
+        public LoginUserHandler(IUnitOfWork uow, IMapper mapper, ITokenService tokenService, IPasswordService passwordService)
         {
             _uow = uow;
             _mapper = mapper;
-            IJwtService = iJwtService;
+            _tokenService = tokenService;
             _passwordService = passwordService;
         }
 
@@ -42,7 +42,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
             var data = new UserTokensReponse
             {
                 User = _mapper.Map<UserResponseDto>(user),
-                AccessToken = IJwtService.GenerateAccessTokenToken(user),
+                AccessToken = _tokenService.GenerateAccessTokenToken(user),
                 RefreshToken = "Not implemented"
             };
 

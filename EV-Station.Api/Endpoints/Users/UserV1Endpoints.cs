@@ -1,4 +1,4 @@
-﻿namespace EV_Station.Api.Endpoints.User
+﻿namespace EV_Station.Api.Endpoints.Users
 {
     public class UserEndpoints : IEndpointDefinition
     {

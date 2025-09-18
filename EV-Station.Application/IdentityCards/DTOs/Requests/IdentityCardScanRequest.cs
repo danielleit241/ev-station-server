@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EV_Station.Application.IdentityCards.DTOs.Requests
+﻿namespace EV_Station.Application.IdentityCards.DTOs.Requests
 {
-    internal class IdentityCardScanRequest
+    public class IdentityCardScanRequest
     {
+        public string FrontImageUrl { get; set; } = default!;
+        public string BackImageUrl { get; set; } = default!;
     }
 }

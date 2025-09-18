@@ -1,4 +1,7 @@
-﻿namespace EV_Station.Api.Extensions
+﻿using EV_Station.Application.IdentityCards.CommandHandlers;
+using EV_Station.Infrastructure.Services.GeminiAi;
+
+namespace EV_Station.Api.Extensions
 {
     public static class ApplicationServiceExtensions
     {
@@ -11,7 +14,10 @@
             AddCors(builder);
             AddAuthentication(builder);
             builder.Services.AddAuthorization();
-            builder.Services.AddMediatR(typeof(RegisterUser));
+
+            builder.Services.AddMediatR(typeof(RegisterUser).Assembly);
+            builder.Services.AddMediatR(typeof(IdentityCardScanHandler).Assembly);
+
             builder.Services.AddAutoMapper(typeof(UserProfile));
 
             return builder;
@@ -136,8 +142,10 @@
         {
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IPasswordService, PasswordService>();
+            builder.Services.AddScoped<ITesseractOcrService, TesseractOcrService>();
+            builder.Services.AddScoped<IGeminiAiService, GeminiAiService>();
             builder.Services.AddScoped<DatabaseSeeder>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();

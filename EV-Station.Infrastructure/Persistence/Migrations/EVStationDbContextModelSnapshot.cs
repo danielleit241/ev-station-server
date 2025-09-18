@@ -66,7 +66,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DriverLicense");
+                    b.ToTable("DriverLicenses");
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.IdentityCard", b =>
@@ -78,8 +78,8 @@ namespace EV_Station.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("CreateDate")
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -87,8 +87,8 @@ namespace EV_Station.Infrastructure.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DayOfExpiry")
+                        .HasColumnType("date");
 
                     b.Property<string>("FrontImagePath")
                         .IsRequired()
@@ -114,6 +114,9 @@ namespace EV_Station.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -121,7 +124,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("IdentityCard");
+                    b.ToTable("IdentityCards");
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.Provider", b =>

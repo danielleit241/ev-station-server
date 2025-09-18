@@ -12,8 +12,8 @@ namespace EV_Station.Domain.Models
         public DateTime DateOfBirth { get; set; }
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string PlaceOfResidence { get; set; } = string.Empty;
-        public DateTime CreateDate { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateOnly CreateDate { get; set; }
+        public DateOnly DayOfExpiry { get; set; }
         public string FrontImagePath { get; set; } = string.Empty;
         public string BackImagePath { get; set; } = string.Empty;
         public VerificationStatus Status { get; set; } = VerificationStatus.Pending;
