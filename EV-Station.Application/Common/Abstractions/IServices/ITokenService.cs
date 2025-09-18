@@ -4,6 +4,8 @@ namespace EV_Station.Application.Common.Abstractions.IServices
 {
     public interface ITokenService
     {
-        public string GenerateAccessTokenToken(User user);
+        public string GenerateAccessToken(User user);
+        public string GenerateRefreshToken();
+        public string GenerateAndMapRefreshToken(User user);
     }
 }

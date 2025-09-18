@@ -25,28 +25,39 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
 
         public async Task<GenericApiResponse<UserTokensReponse>> Handle(LoginUser request, CancellationToken cancellationToken)
         {
-            var userRepo = _uow.Users;
-
-            if (!await userRepo.IsEmailExist(request.dto.Email))
+            await _uow.BeginTransactionAsync();
+            try
             {
-                return GenericApiResponse<UserTokensReponse>.FailResponse("Email is not exist in the system");
+                var userRepo = _uow.Users;
+
+                if (!await userRepo.IsEmailExist(request.dto.Email))
+                {
+                    return GenericApiResponse<UserTokensReponse>.FailResponse("Email is not exist in the system");
+                }
+
+                var user = await userRepo.GetByEmail(request.dto.Email);
+
+                if (!_passwordService.VerifyPassword(request.dto.Password, user!.PasswordHash!))
+                {
+                    return GenericApiResponse<UserTokensReponse>.FailResponse("Password is incorrect");
+                }
+
+                var data = new UserTokensReponse
+                {
+                    User = _mapper.Map<UserResponseDto>(user),
+                    AccessToken = IJwtService.GenerateAccessToken(user),
+                    RefreshToken = IJwtService.GenerateAndMapRefreshToken(user),
+                };
+
+                await _uow.SaveChangesAsync(cancellationToken);
+                await _uow.CommitAsync();
+                return GenericApiResponse<UserTokensReponse>.SuccessResponse(data, "Login user successfully");
             }
-
-            var user = await userRepo.GetByEmail(request.dto.Email);
-
-            if (!_passwordService.VerifyPassword(request.dto.Password, user!.PasswordHash!))
+            catch
             {
-                return GenericApiResponse<UserTokensReponse>.FailResponse("Password is incorrect");
+                await _uow.RollbackAsync();
+                return GenericApiResponse<UserTokensReponse>.FailResponse("Login user failed");
             }
-
-            var data = new UserTokensReponse
-            {
-                User = _mapper.Map<UserResponseDto>(user),
-                AccessToken = _tokenService.GenerateAccessTokenToken(user),
-                RefreshToken = "Not implemented"
-            };
-
-            return GenericApiResponse<UserTokensReponse>.SuccessResponse(data, "Login user successfully");
         }
     }
 }
