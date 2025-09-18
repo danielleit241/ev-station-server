@@ -49,7 +49,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 var data = new UserTokensReponse
                 {
                     User = _mapper.Map<UserResponseDto>(user),
-                    AccessToken = IJwtService.GenerateAccessTokenToken(user),
+                    AccessToken = IJwtService.GenerateAccessToken(user),
                     RefreshToken = "Not implemented"
                 };
 
