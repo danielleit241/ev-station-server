@@ -13,7 +13,7 @@ namespace EV_Station.Domain.Models
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string PlaceOfResidence { get; set; } = string.Empty;
         public DateOnly CreateDate { get; set; }
-        public DateOnly DayOfExpiry { get; set; }
+        public DateOnly ExpiryDate { get; set; }
         public string FrontImagePath { get; set; } = string.Empty;
         public string BackImagePath { get; set; } = string.Empty;
         public VerificationStatus Status { get; set; } = VerificationStatus.Pending;

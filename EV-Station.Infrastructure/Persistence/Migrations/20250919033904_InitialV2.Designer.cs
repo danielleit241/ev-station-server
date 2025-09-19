@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EV_Station.Infrastructure.Migrations
 {
     [DbContext(typeof(EVStationDbContext))]
-    [Migration("20250918130009_UpdateIdentityCard")]
-    partial class UpdateIdentityCard
+    [Migration("20250919033904_InitialV2")]
+    partial class InitialV2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,11 +81,17 @@ namespace EV_Station.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateOnly>("CreateDate")
+                        .HasColumnType("date");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("DayOfExpiry")
+                        .HasColumnType("date");
 
                     b.Property<string>("FrontImagePath")
                         .IsRequired()
@@ -182,6 +188,12 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.Property<int>("ProviderId")
                         .HasColumnType("int");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
