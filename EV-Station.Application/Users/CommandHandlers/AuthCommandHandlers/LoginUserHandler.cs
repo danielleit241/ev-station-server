@@ -4,6 +4,7 @@ using EV_Station.Application.Common.Abstractions.IServices;
 using EV_Station.Application.Common.Responses;
 using EV_Station.Application.Users.Commands.AuthCommands;
 using EV_Station.Application.Users.DTOs.Response;
+using EV_Station.Domain.Models;
 using MediatR;
 
 namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
@@ -42,12 +43,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                     return GenericApiResponse<UserTokensReponse>.FailResponse("Password is incorrect");
                 }
 
-                var data = new UserTokensReponse
-                {
-                    User = _mapper.Map<UserResponseDto>(user),
-                    AccessToken = _tokenService.GenerateAccessToken(user),
-                    RefreshToken = _tokenService.GenerateAndMapRefreshToken(user),
-                };
+                var data = await GenerateAndUpdateUserTokensAsync(user, cancellationToken);
 
                 await _uow.SaveChangesAsync(cancellationToken);
                 await _uow.CommitAsync();
@@ -58,6 +54,27 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 await _uow.RollbackAsync();
                 return GenericApiResponse<UserTokensReponse>.FailResponse("Login user failed");
             }
+        }
+
+        private async Task<UserTokensReponse> GenerateAndUpdateUserTokensAsync(User user, CancellationToken cancellationToken)
+        {
+            var accessToken = _tokenService.GenerateAccessToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            var data = new UserTokensReponse
+            {
+                User = _mapper.Map<UserResponseDto>(user),
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+            };
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+            _uow.Users.Update(user);
+            await _uow.SaveChangesAsync(cancellationToken);
+
+            return data;
         }
     }
 }
