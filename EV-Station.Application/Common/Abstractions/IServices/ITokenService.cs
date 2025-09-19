@@ -1,4 +1,5 @@
-﻿using EV_Station.Domain.Models;
+﻿using EV_Station.Application.Users.DTOs.Response;
+using EV_Station.Domain.Models;
 
 namespace EV_Station.Application.Common.Abstractions.IServices
 {
@@ -6,6 +7,5 @@ namespace EV_Station.Application.Common.Abstractions.IServices
     {
         public string GenerateAccessToken(User user);
         public string GenerateRefreshToken();
-        //public string GenerateAndMapRefreshToken(User user);
     }
 }

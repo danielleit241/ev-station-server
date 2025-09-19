@@ -1,4 +1,5 @@
-﻿namespace EV_Station.Api.Endpoints.Auth
+﻿
+namespace EV_Station.Api.Endpoints.Auth
 {
     public class AuthV1Endpoints : IEndpointDefinition
     {
@@ -18,6 +19,17 @@
             v1.MapPost("google-login", GoogleLoginAsync)
                 .WithName("GoogleLoginUser")
                 .AddEndpointFilter<GoogleLoginValidationFilter>();
+
+            v1.MapPost("refresh-token", RefreshTokenAsync)
+                .WithName("RefreshToken");
+
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<UserTokensReponse>>, NotFound>> RefreshTokenAsync([FromBody] UserRefreshTokenDto request, IMediator mediator)
+        {
+            var refreshTokenQuery = new RefreshTokenUser(request);
+            var result = await mediator.Send(refreshTokenQuery);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<UserTokensReponse>>, NotFound>> GoogleLoginAsync(GoogleLoginDto dto, IMediator mediator)

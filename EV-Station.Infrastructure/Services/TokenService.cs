@@ -1,5 +1,6 @@
 ﻿using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 using EV_Station.Application.Common.Abstractions.IServices;
+using EV_Station.Application.Users.DTOs.Response;
 using EV_Station.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -34,17 +35,6 @@ namespace EV_Station.Infrastructure.Services
 
             return new JwtSecurityTokenHandler().WriteToken(new JwtSecurityTokenHandler().CreateToken(tokenDescriptor));
         }
-
-        //public string GenerateAndMapRefreshToken(User user)
-        //{
-        //    var userRepository = _uow.Users;
-
-        //    var refreshToken = GenerateRefreshToken();
-        //    user.RefreshToken = refreshToken;
-        //    user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-        //    userRepository.Update(user);
-        //    return refreshToken;
-        //}
 
         public string GenerateRefreshToken()
         {
