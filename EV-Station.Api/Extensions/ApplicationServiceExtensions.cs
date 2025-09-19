@@ -1,4 +1,4 @@
-﻿using EV_Station.Application.IdentityCards.CommandHandlers;
+﻿using EV_Station.Application.IdentityCards.QueryHandlers;
 using EV_Station.Infrastructure.Services.GeminiAi;
 
 namespace EV_Station.Api.Extensions

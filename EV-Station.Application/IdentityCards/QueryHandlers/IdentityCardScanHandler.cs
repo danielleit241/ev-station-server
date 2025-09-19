@@ -6,7 +6,7 @@ using EV_Station.Application.IdentityCards.Commands;
 using EV_Station.Application.IdentityCards.DTOs.Responses;
 using MediatR;
 
-namespace EV_Station.Application.IdentityCards.CommandHandlers
+namespace EV_Station.Application.IdentityCards.QueryHandlers
 {
     public class IdentityCardScanHandler : IRequestHandler<IdentityCardScan, GenericApiResponse<IdentityCardScanResponse>>
     {
@@ -56,8 +56,8 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
             if (string.IsNullOrWhiteSpace(data.PlaceOfOrigin)) nullOrEmptyCount++;
             if (string.IsNullOrWhiteSpace(data.PlaceOfResidence)) nullOrEmptyCount++;
             if (!data.DateOfBirth.HasValue) nullOrEmptyCount++;
-            if (data.CreateDate == default(DateOnly)) nullOrEmptyCount++;
-            if (data.DayOfExpiry == default(DateOnly)) nullOrEmptyCount++;
+            if (data.CreateDate == default) nullOrEmptyCount++;
+            if (data.DayOfExpiry == default) nullOrEmptyCount++;
 
             return nullOrEmptyCount <= maxNullAllowed;
         }
