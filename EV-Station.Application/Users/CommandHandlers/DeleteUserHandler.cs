@@ -24,12 +24,13 @@ namespace EV_Station.Application.Users.CommandHandlers
             var user = await userRepository.GetByIdAsync(request.id);
             if (user is null)
             {
-                return GenericApiResponse<UserResponseDto>.FailResponse("User not found.");
+                return GenericApiResponse<UserResponseDto>.FailResponse("Tài khoản không tồn tại.");
             }
             userRepository.Delete(user);
             await _uow.SaveChangesAsync(cancellationToken);
+
             var userResponse = _mapper.Map<UserResponseDto>(user);
-            return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Delete user successfully");
+            return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Xóa tài khoản thành công");
         }
     }
 }

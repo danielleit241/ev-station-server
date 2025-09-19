@@ -5,20 +5,15 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EV_Station.Infrastructure.Repositories.BaseRepositories
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork(EVStationDbContext context) : IUnitOfWork
     {
-        private readonly EVStationDbContext _context;
+        private readonly EVStationDbContext _context = context;
         private readonly Dictionary<Type, object> _repositories = new();
         private IDbContextTransaction? _transaction;
 
-        private IUserRepository _userRepository;
-        private IRoleRepository _roleRepository;
-        private IProviderRepository _providerRepository;
-
-        public UnitOfWork(EVStationDbContext context)
-        {
-            _context = context;
-        }
+        private IUserRepository? _userRepository;
+        private IRoleRepository? _roleRepository;
+        private IProviderRepository? _providerRepository;
 
         public IUserRepository Users
         {

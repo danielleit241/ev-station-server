@@ -33,21 +33,21 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
 
                 if (!await userRepo.IsEmailExist(request.dto.Email))
                 {
-                    return GenericApiResponse<UserTokensReponse>.FailResponse("Email is not exist in the system");
+                    return GenericApiResponse<UserTokensReponse>.FailResponse("Email không tồn tại trong hệ thống.");
                 }
 
                 var user = await userRepo.GetByEmail(request.dto.Email);
 
                 if (!_passwordService.VerifyPassword(request.dto.Password, user!.PasswordHash!))
                 {
-                    return GenericApiResponse<UserTokensReponse>.FailResponse("Password is incorrect");
+                    return GenericApiResponse<UserTokensReponse>.FailResponse("Sai mật khẩu, vui lòng thử lại.");
                 }
 
                 var data = await GenerateAndUpdateUserTokensAsync(user, cancellationToken);
 
                 await _uow.SaveChangesAsync(cancellationToken);
                 await _uow.CommitAsync();
-                return GenericApiResponse<UserTokensReponse>.SuccessResponse(data, "Login user successfully");
+                return GenericApiResponse<UserTokensReponse>.SuccessResponse(data, "Đăng nhập thành công");
             }
             catch
             {

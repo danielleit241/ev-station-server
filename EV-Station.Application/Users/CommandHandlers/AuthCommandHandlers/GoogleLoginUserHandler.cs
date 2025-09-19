@@ -6,7 +6,6 @@ using EV_Station.Application.Users.Commands.AuthCommands;
 using EV_Station.Application.Users.DTOs.Response;
 using EV_Station.Domain.Models;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
@@ -17,14 +16,14 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
-        private readonly IConfiguration _config;
+        private readonly IGoogleAuthService _googleAuthService;
 
-        public GoogleLoginUserHandler(IUnitOfWork uow, IMapper mapper, ITokenService tokenService, IConfiguration config)
+        public GoogleLoginUserHandler(IUnitOfWork uow, IMapper mapper, ITokenService tokenService, IGoogleAuthService googleAuthService)
         {
             _uow = uow;
             _mapper = mapper;
             _tokenService = tokenService;
-            _config = config;
+            _googleAuthService = googleAuthService;
         }
 
         public async Task<GenericApiResponse<UserTokensReponse>> Handle(GoogleLoginUser request, CancellationToken cancellationToken)
@@ -32,7 +31,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
             await _uow.BeginTransactionAsync();
             try
             {
-                var payload = await GetPayloadAsync(request.dto.IdToken);
+                var payload = await _googleAuthService.VerifyGoogleTokenAsync(request.dto.IdToken);
 
                 User user;
                 if (await _uow.Users.IsEmailExist(payload.Email))
@@ -41,7 +40,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 }
                 else
                 {
-                    user = await GetUserAsync(payload);
+                    user = await GetRegisterUserAsync(payload);
                     await _uow.Users.AddAsync(user);
                     await _uow.SaveChangesAsync(cancellationToken);
                 }
@@ -54,16 +53,16 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 };
 
                 await _uow.CommitAsync();
-                return GenericApiResponse<UserTokensReponse>.SuccessResponse(data, "Login with google user successfully");
+                return GenericApiResponse<UserTokensReponse>.SuccessResponse(data, "Đăng nhập google thành công");
             }
             catch (Exception ex)
             {
                 await _uow.RollbackAsync();
-                return GenericApiResponse<UserTokensReponse>.FailResponse($"Login failed: {ex.Message}");
+                return GenericApiResponse<UserTokensReponse>.FailResponse($"Đăng nhập thất bại: {ex.Message}");
             }
         }
 
-        private async Task<User> GetUserAsync(Payload payload)
+        private async Task<User> GetRegisterUserAsync(Payload payload)
         {
             var role = await _uow.Roles.GetRoleByName("Renter");
             var provider = await _uow.Providers.GetProviderByName("Google");
@@ -79,19 +78,6 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 ProviderId = provider!.Id,
                 Provider = provider!,
             };
-        }
-
-        private async Task<Payload> GetPayloadAsync(string idToken)
-        {
-            var settings = new ValidationSettings
-            {
-                Audience = new[] {
-                    _config["Authentication:Google:ClientId"],
-                    _config["Authentication:Google:ClientIdPlayGround"]
-                }
-            };
-
-            return await ValidateAsync(idToken, settings);
         }
     }
 }

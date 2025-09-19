@@ -31,14 +31,14 @@ namespace EV_Station.Application.Users.CommandHandlers
 
                 if (await userRepository.IsEmailExist(request.dto.email))
                 {
-                    return GenericApiResponse<UserResponseDto>.FailResponse("Email is already in use.");
+                    return GenericApiResponse<UserResponseDto>.FailResponse("Email này đã được sử dụng.");
                 }
 
                 var role = await _uow.Roles.GetRoleByName("Renter");
                 var provider = await _uow.Providers.GetProviderByName("Local");
                 if (role is null || provider is null)
                 {
-                    return GenericApiResponse<UserResponseDto>.FailResponse("Role or Provider not found.");
+                    return GenericApiResponse<UserResponseDto>.FailResponse("Role hoặc Provider không tồn tại.");
                 }
 
                 var user = GetRegisterUser(request, role, provider);
@@ -48,12 +48,12 @@ namespace EV_Station.Application.Users.CommandHandlers
 
                 await _uow.SaveChangesAsync(cancellationToken);
                 await _uow.CommitAsync();
-                return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Create user successfully");
+                return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Tạo người dùng thành công");
             }
             catch (Exception ex)
             {
                 await _uow.RollbackAsync();
-                return GenericApiResponse<UserResponseDto>.FailResponse(ex.Message);
+                return GenericApiResponse<UserResponseDto>.FailResponse($"Đăng kí người dùng thất bại. Lỗi: {ex.Message}");
             }
         }
 

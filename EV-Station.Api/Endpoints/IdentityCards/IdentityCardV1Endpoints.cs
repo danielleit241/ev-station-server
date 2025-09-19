@@ -1,9 +1,4 @@
-﻿
-using EV_Station.Application.IdentityCards.Commands;
-using EV_Station.Application.IdentityCards.DTOs.Requests;
-using EV_Station.Application.IdentityCards.DTOs.Responses;
-
-namespace EV_Station.Api.Endpoints.IdentityCards
+﻿namespace EV_Station.Api.Endpoints.IdentityCards
 {
     public class IdentityCardV1Endpoints : IEndpointDefinition
     {

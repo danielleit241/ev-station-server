@@ -30,7 +30,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 var userRepo = _uow.Users;
                 if (await userRepo.IsEmailExist(request.dto.Email))
                 {
-                    return GenericApiResponse<UserResponseDto>.FailResponse("Email is already in use.");
+                    return GenericApiResponse<UserResponseDto>.FailResponse("Email này đã được sử dụng.");
                 }
 
                 var user = await GetRegisterUserAsync(request);
@@ -40,12 +40,12 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
 
                 await _uow.SaveChangesAsync(cancellationToken);
                 await _uow.CommitAsync();
-                return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Register user successfully");
+                return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponse, "Đăng kí tài khoản thành công");
             }
             catch (Exception ex)
             {
                 await _uow.RollbackAsync();
-                return GenericApiResponse<UserResponseDto>.FailResponse($"Register user failed. Error: {ex.Message}");
+                return GenericApiResponse<UserResponseDto>.FailResponse($"Đăng kí tài khoản thất bại. Lỗi: {ex.Message}");
             }
         }
 

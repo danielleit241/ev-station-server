@@ -26,7 +26,7 @@ namespace EV_Station.Application.Users.CommandHandlers
 
             if (user == null)
             {
-                return GenericApiResponse<UserResponseDto>.FailResponse("User not found.");
+                return GenericApiResponse<UserResponseDto>.FailResponse("Tài khoản không tồn tại.");
             }
             user.Email = request.dto.Email ?? user.Email;
             user.AvatarUrl = request.dto.AvatarUrl ?? user.AvatarUrl;
@@ -36,7 +36,7 @@ namespace EV_Station.Application.Users.CommandHandlers
             await _uow.SaveChangesAsync(cancellationToken);
 
             var userResponseDto = _mapper.Map<UserResponseDto>(user);
-            return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponseDto);
+            return GenericApiResponse<UserResponseDto>.SuccessResponse(userResponseDto, "Cập nhật tài khoản thành công");
         }
     }
 }
