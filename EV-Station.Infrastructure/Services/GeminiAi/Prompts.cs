@@ -1,4 +1,5 @@
-﻿namespace EV_Station.Infrastructure.Services.GeminiAi
+﻿
+namespace EV_Station.Infrastructure.Services.GeminiAi
 {
     public class Prompts
     {
@@ -9,7 +10,7 @@ Dữ liệu OCR:
 
 Yêu cầu:
 1. Chỉ trích xuất và trả về các thông tin sau dưới dạng JSON tiếng Việt hợp lệ:
-    - CardNumber (số căn cước)
+    - LicenseNumber (số căn cước)
     - FullName (họ tên)
     - Sex (giới tính)
     - Nationality (quốc tịch)
@@ -37,6 +38,51 @@ Yêu cầu:
 
 
 **Lưu ý:** Nếu không trích xuất được thông tin nào hoặc có trên 3 trường bị thiếu, tuyệt đối không tạo JSON mà chỉ trả về chuỗi rỗng.
+";
+        public static string DriverLisencePrompt(string rawOcrText) => $@"Hãy chuẩn hóa thông tin giấy phép lái xe Việt Nam dựa trên dữ liệu OCR.
+
+Dữ liệu OCR:
+{rawOcrText}
+
+Yêu cầu:
+1. Chỉ trích xuất và trả về các thông tin sau dưới dạng JSON tiếng Việt hợp lệ:
+    - LicenseNumber (số giấy phép)
+    - FullName (họ tên)
+    - DateOfBirth (ngày sinh, định dạng yyyy-MM-dd)
+    - Nationality (quốc tịch)
+    - Address (nơi cư trú)
+    - LicenseClass (hạng giấy phép, chỉ nhận các giá trị: A1, A2, B1, B2, C, D)
+    - ClassificationOfMotorVehicles (loại phương tiện được phép điều khiển, ví dụ: xe mô tô 2 bánh, ô tô con, xe tải,…)
+    - BeginingDate (ngày bắt đầu hiệu lực, định dạng yyyy-MM-dd)
+    - ExpiresDate (ngày hết hạn, định dạng yyyy-MM-dd, có thể null nếu vô thời hạn)
+
+2. Nếu giá trị là ngày, định dạng ban đầu có thể là dd-MM-yyyy, hãy chuyển thành yyyy-MM-dd.
+3. Nếu dữ liệu không đủ thông tin cho một trường, trả về giá trị rỗng hoặc null cho trường đó.
+4. Giữ nguyên cấu trúc trường như trên trong JSON.
+5. Sửa lỗi chính tả OCR nếu có.
+6. Đảm bảo JSON trả về không có ký tự thừa, chỉ chứa các trường trên.
+7. **Cảnh báo:** Nếu có trên 3 trường bị null hoặc rỗng, hãy trả về chuỗi rỗng ("") thay vì JSON. Tuyệt đối không tự bịa, dự đoán, hoặc tạo thông tin không có trong dữ liệu OCR.
+
+8. Quy tắc về ngày hiệu lực (BeginingDate) và ngày hết hạn (ExpiresDate):
+   - Ưu tiên lấy từ OCR nếu có.
+   - Nếu thiếu, xác định dựa trên LicenseClass + BeginingDate theo luật hiện hành:
+     * **Trước 01/01/2025:**
+       - A1, A2: Vô thời hạn (ExpiresDate = null).
+       - B1, B2, C, D: 10 năm kể từ BeginingDate.
+     * **Từ 01/01/2025 trở đi (áp dụng quy định mới):**
+       - A1, A2: Vô thời hạn.
+       - B1: Có thời hạn đến 60 tuổi (nếu cấp trước 45 tuổi) hoặc 10 năm (nếu cấp sau 45 tuổi).
+       - B2, C, D: Thời hạn 10 năm kể từ BeginingDate.
+
+9. Nếu không nhận diện được ClassificationOfMotorVehicles từ OCR, hãy suy luận dựa vào LicenseClass và BeginingDate (ngày trúng tuyển/hiệu lực) theo quy định của Việt Nam. Ví dụ:
+   - A1: Xe mô tô hai bánh dung tích ≤ 175cc, xe mô tô 3 bánh cho người khuyết tật.
+   - A2: Xe mô tô hai bánh dung tích > 175cc, và tất cả các loại xe được quy định cho hạng A1.
+   - B1: Ô tô ≤ 9 chỗ ngồi, xe tải ≤ 3.5 tấn (không kinh doanh vận tải).
+   - B2: Ô tô ≤ 9 chỗ ngồi, xe tải ≤ 3.5 tấn (có thể kinh doanh vận tải).
+   - C: Ô tô tải ≥ 3.5 tấn, xe đầu kéo kéo rơ-moóc ≤ 3.5 tấn.
+   - D: Ô tô chở người từ 10 đến 30 chỗ ngồi (kể cả lái xe).
+
+10. Đảm bảo tính nhất quán giữa BeginingDate và ExpiresDate theo từng giai đoạn luật (trước và sau 2025).
 ";
     }
 }

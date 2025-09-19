@@ -20,7 +20,6 @@ namespace EV_Station.Application.Common.Mappings
 
             CreateMap<CreateUserDto, User>()
                 .ForMember(d => d.PasswordHash, otp => otp.Ignore());
-
         }
     }
 }
