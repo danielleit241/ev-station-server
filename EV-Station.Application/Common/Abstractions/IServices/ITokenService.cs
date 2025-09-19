@@ -6,6 +6,6 @@ namespace EV_Station.Application.Common.Abstractions.IServices
     {
         public string GenerateAccessToken(User user);
         public string GenerateRefreshToken();
-        public string GenerateAndMapRefreshToken(User user);
+        //public string GenerateAndMapRefreshToken(User user);
     }
 }
