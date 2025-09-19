@@ -25,11 +25,11 @@ namespace EV_Station.Application.IdentityCards.QueryHandlers
 
         public async Task<GenericApiResponse<IdentityCardScanResponse>> Handle(IdentityCardScan request, CancellationToken cancellationToken)
         {
-            var frontText = await _tesseractOcrService.ExtractTextFromImageAsync(request.dto.FrontImageUrl);
-            var backText = await _tesseractOcrService.ExtractTextFromImageAsync(request.dto.BackImageUrl);
-            var fullText = frontText + "\n" + backText;
+            var rawOcrFrontText = await _tesseractOcrService.ExtractTextFromImageAsync(request.dto.FrontImageUrl);
+            var rawOcrBackText = await _tesseractOcrService.ExtractTextFromImageAsync(request.dto.BackImageUrl);
+            var rawOcrText = rawOcrFrontText + "\n" + rawOcrBackText;
 
-            var result = await _geminiAi.ExtractIdentityCardInfoAsync(fullText);
+            var result = await _geminiAi.ExtractIdentityCardInfoAsync(rawOcrText);
             if (result == null)
             {
                 return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Không thể quét ảnh, vui lòng gửi ảnh có độ sắc nét cao.");
@@ -49,7 +49,7 @@ namespace EV_Station.Application.IdentityCards.QueryHandlers
                 return false;
             int nullOrEmptyCount = 0;
 
-            if (string.IsNullOrWhiteSpace(data.CardNumber)) nullOrEmptyCount++;
+            if (string.IsNullOrWhiteSpace(data.CardNumber)) return false;
             if (string.IsNullOrWhiteSpace(data.FullName)) nullOrEmptyCount++;
             if (string.IsNullOrWhiteSpace(data.Sex)) nullOrEmptyCount++;
             if (string.IsNullOrWhiteSpace(data.Nationality)) nullOrEmptyCount++;

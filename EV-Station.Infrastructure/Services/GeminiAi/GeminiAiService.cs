@@ -1,9 +1,11 @@
 ﻿using EV_Station.Application.Common.Abstractions.IServices;
 using EV_Station.Application.Common.Responses.Gemini;
+using EV_Station.Application.DriverLisences.DTOs.Responses;
 using EV_Station.Application.IdentityCards.DTOs.Responses;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace EV_Station.Infrastructure.Services.GeminiAi
 {
@@ -26,10 +28,30 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
             {
                 var prompt = Prompts.IdentityCardPrompt(rawOcrText);
                 var responseJson = await QueryGeminiAiAsync(prompt);
+                if (responseJson == null)
+                    return null;
                 var identityCard = JsonSerializer.Deserialize<IdentityCardScanResponse>(responseJson, JsonOptions());
                 if (identityCard == null)
                     return null;
                 return identityCard;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
+        public async Task<DriverLisenceScanResponse?> ExtractDriverLisenceInfoAsync(string rawOcrText)
+        {
+            try
+            {
+                var prompt = Prompts.DriverLisencePrompt(rawOcrText);
+                var responseJson = await QueryGeminiAiAsync(prompt);
+                var driverLisence = JsonSerializer.Deserialize<DriverLisenceScanResponse>(responseJson, JsonOptions());
+                if (driverLisence == null)
+                    return null;
+                return driverLisence;
             }
             catch (Exception ex)
             {
@@ -121,7 +143,12 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
 
         private JsonSerializerOptions JsonOptions() => new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
         };
+
     }
 }

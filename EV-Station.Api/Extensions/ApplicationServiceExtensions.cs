@@ -13,6 +13,7 @@ namespace EV_Station.Api.Extensions
             AddApiVersioning(builder);
             AddCors(builder);
             AddAuthentication(builder);
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddAuthorization();
 
             builder.Services.AddMediatR(typeof(RegisterUser).Assembly);

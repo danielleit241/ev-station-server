@@ -11,7 +11,9 @@ namespace EV_Station.Domain.Models
         public string Nationality { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public LicenseClass LicenseClass { get; set; }
-        public DateTime ExpiresDate { get; set; }
+        public DateOnly? BeginingDate { get; set; }
+        public DateOnly? ExpiresDate { get; set; }
+        public string ClassificationOfMotorVehicles { get; set; } = string.Empty;
         public string FrontImagePath { get; set; } = string.Empty;
         public string BackImagePath { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
