@@ -26,8 +26,6 @@
     <Folder Include="DriverLisences\DTOs\Requests\" />
     <Folder Include="DriverLisences\QueryHandlers\" />
     <Folder Include="DriverLisences\Queries\" />
-    <Folder Include="IdentityCards\CommandHandlers\" />
-    <Folder Include="IdentityCards\Commands\" />
   </ItemGroup>
 
 </Project>

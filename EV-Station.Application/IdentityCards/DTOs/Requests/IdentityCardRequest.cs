@@ -11,5 +11,7 @@
         public string PlaceOfResidence { get; set; } = string.Empty;
         public DateOnly? CreateDate { get; set; }
         public DateOnly? DayOfExpiry { get; set; }
+
+
     }
 }
