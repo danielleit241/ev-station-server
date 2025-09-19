@@ -22,12 +22,20 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
 
         public async Task<IdentityCardScanResponse?> ExtractIdentityCardInfoAsync(string rawOcrText)
         {
-            var prompt = Prompts.IdentityCardPrompt(rawOcrText);
-            var responseJson = await QueryGeminiAiAsync(prompt);
-            var identityCard = JsonSerializer.Deserialize<IdentityCardScanResponse>(responseJson, JsonOptions());
-            if (identityCard == null)
+            try
+            {
+                var prompt = Prompts.IdentityCardPrompt(rawOcrText);
+                var responseJson = await QueryGeminiAiAsync(prompt);
+                var identityCard = JsonSerializer.Deserialize<IdentityCardScanResponse>(responseJson, JsonOptions());
+                if (identityCard == null)
+                    return null;
+                return identityCard;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
                 return null;
-            return identityCard;
+            }
         }
 
         public async Task<string> QueryGeminiAiAsync(string prompt)
@@ -43,6 +51,7 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
 
             var response = await _httpClient.PostAsync(_endpoint, content);
             var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
 
             string extractedJson = ExtractJson(responseBody);
 
@@ -90,16 +99,25 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
 
         private static string RemoveCodeFence(string text)
         {
+            if (string.IsNullOrWhiteSpace(text))
+                return "";
+
             text = text.Trim();
-            if (text.StartsWith("```json"))
+            if (text.StartsWith("```"))
             {
-                text = text.Substring(7);
+                int firstLineEnd = text.IndexOf('\n');
+                if (firstLineEnd != -1)
+                    text = text.Substring(firstLineEnd).Trim();
+
                 int endIndex = text.LastIndexOf("```");
                 if (endIndex != -1)
-                    text = text.Substring(0, endIndex);
+                    text = text.Substring(0, endIndex).Trim();
             }
-            return text.Trim();
+            text = text.Trim('`', '\n', '\r', ' ');
+
+            return text;
         }
+
 
         private JsonSerializerOptions JsonOptions() => new JsonSerializerOptions
         {

@@ -1,6 +1,6 @@
-﻿namespace EV_Station.Application.IdentityCards.DTOs.Responses
+﻿namespace EV_Station.Application.IdentityCards.DTOs.Requests
 {
-    public class IdentityCardScanResponse
+    public class IdentityCardRequest
     {
         public string CardNumber { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
