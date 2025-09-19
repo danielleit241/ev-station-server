@@ -22,8 +22,10 @@
   <ItemGroup>
     <Folder Include="DriverLisences\Commands\" />
     <Folder Include="DriverLisences\CommandHandlers\" />
-    <Folder Include="IdentityCards\CommandHandlers\" />
-    <Folder Include="IdentityCards\Commands\" />
+    <Folder Include="DriverLisences\DTOs\Responses\" />
+    <Folder Include="DriverLisences\DTOs\Requests\" />
+    <Folder Include="DriverLisences\QueryHandlers\" />
+    <Folder Include="DriverLisences\Queries\" />
   </ItemGroup>
 
 </Project>
