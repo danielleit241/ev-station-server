@@ -1,6 +1,5 @@
 ﻿using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 using EV_Station.Application.Common.Abstractions.IServices;
-using EV_Station.Application.Users.DTOs.Response;
 using EV_Station.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

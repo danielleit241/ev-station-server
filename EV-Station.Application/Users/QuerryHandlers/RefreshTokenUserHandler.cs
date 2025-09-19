@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 using EV_Station.Application.Common.Abstractions.IServices;
 using EV_Station.Application.Common.Responses;
@@ -29,12 +24,13 @@ namespace EV_Station.Application.Users.QuerryHandlers
         public async Task<GenericApiResponse<UserTokensReponse>> Handle(RefreshTokenUser request, CancellationToken cancellationToken)
         {
             var userRepository = _uow.Users;
-            var user = await userRepository.GetByIdAsync(request.dto.userId, u => u.Role);
+            var user = await userRepository.GetByIdAsync(request.dto.UserId, u => u.Role);
 
-            if (user == null) {
+            if (user == null)
+            {
                 return GenericApiResponse<UserTokensReponse>.FailResponse("User not found");
             }
-            if(user.RefreshToken != request.dto.refreshToken)
+            if (user.RefreshToken != request.dto.RefreshToken)
             {
                 return GenericApiResponse<UserTokensReponse>.FailResponse("Invalid refresh token");
             }
@@ -49,7 +45,7 @@ namespace EV_Station.Application.Users.QuerryHandlers
             {
                 User = _mapper.Map<UserResponseDto>(user),
                 AccessToken = newAccessToken,
-                RefreshToken = request.dto.refreshToken
+                RefreshToken = request.dto.RefreshToken
             };
 
             return GenericApiResponse<UserTokensReponse>.SuccessResponse(response, "Token refreshed successfully");

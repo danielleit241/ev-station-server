@@ -20,13 +20,19 @@ namespace EV_Station.Api.Endpoints.Auth
                 .WithName("GoogleLoginUser")
                 .AddEndpointFilter<GoogleLoginValidationFilter>();
 
-            v1.MapPost("refresh-token", RefreshTokenAsync)
-                .WithName("RefreshToken");
+            v1.MapPost("refresh-token", RefreshTokenAsync) //chỉ có user đó mới có thể refresh token của họ
+                .WithName("RefreshToken")
+                .RequireAuthorization();
 
         }
 
-        private async Task<Results<Ok<GenericApiResponse<UserTokensReponse>>, NotFound>> RefreshTokenAsync([FromBody] UserRefreshTokenDto request, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<UserTokensReponse>>, NotFound>> RefreshTokenAsync(ICurrentUserService currentUserService, [FromBody] string refreshToken, IMediator mediator)
         {
+            var request = new UserRefreshTokenDto
+            {
+                UserId = currentUserService.UserId,
+                RefreshToken = refreshToken
+            };
             var refreshTokenQuery = new RefreshTokenUser(request);
             var result = await mediator.Send(refreshTokenQuery);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();

@@ -1,5 +1,4 @@
-﻿using EV_Station.Application.Users.DTOs.Response;
-using EV_Station.Domain.Models;
+﻿using EV_Station.Domain.Models;
 
 namespace EV_Station.Application.Common.Abstractions.IServices
 {
