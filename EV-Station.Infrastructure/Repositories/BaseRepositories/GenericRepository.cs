@@ -1,6 +1,7 @@
 ﻿using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 using EV_Station.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace EV_Station.Infrastructure.Repositories.BaseRepositories
 {
@@ -13,14 +14,32 @@ namespace EV_Station.Infrastructure.Repositories.BaseRepositories
             _context = context;
             _dbSet = _context.Set<T>();
         }
-        public async Task<T?> GetByIdAsync(Guid id)
+        public async Task<T?> GetByIdAsync(Guid id,
+            params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.FindAsync(id);
+            IQueryable<T> query = _dbSet;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
         }
-        public async Task<IEnumerable<T>> GetAllAsync()
+
+        public async Task<IEnumerable<T>> GetAllAsync(
+             params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.ToListAsync();
+            IQueryable<T> query = _dbSet;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.ToListAsync();
         }
+
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
