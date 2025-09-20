@@ -11,6 +11,7 @@ global using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepos
 global using EV_Station.Application.Common.Abstractions.IServices;
 global using EV_Station.Application.Common.Mappings;
 global using EV_Station.Application.Common.Responses;
+global using EV_Station.Application.IdentityCards.Commands;
 global using EV_Station.Application.IdentityCards.DTOs.Requests;
 global using EV_Station.Application.IdentityCards.DTOs.Responses;
 global using EV_Station.Application.IdentityCards.Queries;
@@ -21,7 +22,7 @@ global using EV_Station.Application.Users.DTOs.Requests;
 global using EV_Station.Application.Users.DTOs.Response;
 global using EV_Station.Application.Users.Querries;
 global using EV_Station.Domain.Models;
-global using EV_Station.Infrastructure.Persistence.Data;
+global using EV_Station.Infrastructure.Persistence.SqlServer.Data;
 global using EV_Station.Infrastructure.Repositories;
 global using EV_Station.Infrastructure.Repositories.BaseRepositories;
 global using EV_Station.Infrastructure.Services;
@@ -37,7 +38,6 @@ global using Microsoft.OpenApi.Models;
 global using System.Net;
 global using System.Reflection;
 global using System.Text.Json;
-
 
 
 

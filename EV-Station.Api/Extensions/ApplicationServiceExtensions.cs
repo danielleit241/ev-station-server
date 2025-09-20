@@ -1,4 +1,6 @@
-﻿namespace EV_Station.Api.Extensions
+﻿using EV_Station.Infrastructure.Persistence.SqlServer.Data;
+
+namespace EV_Station.Api.Extensions
 {
     public static class ApplicationServiceExtensions
     {

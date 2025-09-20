@@ -1,7 +1,7 @@
 ﻿using EV_Station.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EV_Station.Infrastructure.Persistence.Data
+namespace EV_Station.Infrastructure.Persistence.SqlServer.Data
 {
     public class EVStationDbContext : DbContext
     {

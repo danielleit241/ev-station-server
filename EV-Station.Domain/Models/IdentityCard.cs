@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EV_Station.Domain.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace EV_Station.Domain.Models
 {
@@ -9,7 +10,7 @@ namespace EV_Station.Domain.Models
         public string FullName { get; set; } = string.Empty;
         public string Sex { get; set; } = string.Empty;
         public string Nationality { get; set; } = string.Empty;
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string PlaceOfResidence { get; set; } = string.Empty;
         public DateOnly CreateDate { get; set; }
@@ -22,12 +23,4 @@ namespace EV_Station.Domain.Models
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;
     }
-
-    public enum VerificationStatus
-    {
-        Pending,
-        Verified,
-        Rejected
-    }
-
 }

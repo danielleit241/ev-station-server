@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace EV_Station.Infrastructure.Persistence.Data
+namespace EV_Station.Infrastructure.Persistence.SqlServer.Data
 {
     public class DatabaseSeeder
     {

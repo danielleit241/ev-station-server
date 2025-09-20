@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EV_Station.Domain.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace EV_Station.Domain.Models
 {
@@ -16,18 +17,9 @@ namespace EV_Station.Domain.Models
         public string ClassificationOfMotorVehicles { get; set; } = string.Empty;
         public string FrontImagePath { get; set; } = string.Empty;
         public string BackImagePath { get; set; } = string.Empty;
+        public VerificationStatus VerificationStatus { get; set; } = VerificationStatus.Pending;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;
-    }
-
-    public enum LicenseClass
-    {
-        A1,
-        A2,
-        B1,
-        B2,
-        C,
-        D
     }
 }
