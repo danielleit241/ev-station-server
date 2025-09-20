@@ -1,6 +1,4 @@
-﻿using EV_Station.Infrastructure.Persistence.SqlServer.Data;
-
-namespace EV_Station.Api.Extensions
+﻿namespace EV_Station.Api.Extensions
 {
     public static class ApplicationServiceExtensions
     {
@@ -24,6 +22,8 @@ namespace EV_Station.Api.Extensions
             builder.Services.AddMediatR(typeof(IdentityCardScanHandler).Assembly);
 
             builder.Services.AddAutoMapper(typeof(UserProfile));
+            builder.Services.AddAutoMapper(typeof(IdentityCardProfile));
+
 
             return builder;
         }

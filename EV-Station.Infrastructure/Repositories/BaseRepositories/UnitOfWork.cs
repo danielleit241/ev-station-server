@@ -14,7 +14,7 @@ namespace EV_Station.Infrastructure.Repositories.BaseRepositories
         private IUserRepository? _userRepository;
         private IRoleRepository? _roleRepository;
         private IProviderRepository? _providerRepository;
-
+        private IIdentityCardRepository? _identityCardRepository;
         public IUserRepository Users
         {
             get
@@ -36,6 +36,14 @@ namespace EV_Station.Infrastructure.Repositories.BaseRepositories
             get
             {
                 return _providerRepository ??= new ProviderRepository(_context);
+            }
+        }
+
+        public IIdentityCardRepository IdentityCards
+        {
+            get
+            {
+                return _identityCardRepository ??= new IdentityCardRepository(_context);
             }
         }
 
