@@ -7,9 +7,15 @@ namespace EV_Station.Api.Endpoints.IdentityCards
         {
             var v1 = application.MapGroup("api/v{version:apiVersion}/identity-cards").WithApiVersionSet().HasApiVersion(1, 0);
 
-            v1.MapPost("/scan", ScanIdentityCard)
-                .WithName("ScanIdentityCard")
+            v1.MapPost("/scan-url", ScanIdentityCardUrl)
+                .WithName("ScanIdentityCardUrl")
                 .RequireAuthorization();
+
+            v1.MapPost("/scan-file", ScanIdentityCardFile)
+                .Accepts<IFormFile>("multipart/form-data")
+                .WithName("ScanIdentityCardFile")
+                .RequireAuthorization()
+                .DisableAntiforgery();
 
             v1.MapPost("/create", CreateIdentityCard)
                 .WithName("CreateIdentityCard")
@@ -35,10 +41,17 @@ namespace EV_Station.Api.Endpoints.IdentityCards
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
-        private async Task<Results<Ok<GenericApiResponse<IdentityCardScanResponse>>, NotFound>> ScanIdentityCard(IdentityCardScanRequest request, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardScanResponse>>, NotFound>> ScanIdentityCardFile([FromForm] IdentityCardScanFileRequest request, IMediator mediator)
         {
-            var identityCardScanCommand = new IdentityCardScan(request);
-            var result = await mediator.Send(identityCardScanCommand);
+            var result = await mediator.Send(new IdentityCardScanFile(request));
+
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardScanResponse>>, NotFound>> ScanIdentityCardUrl(IdentityCardScanUrlRequest request, IMediator mediator)
+        {
+            var identityCardScanUrlCommand = new IdentityCardScanUrl(request);
+            var result = await mediator.Send(identityCardScanUrlCommand);
 
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }

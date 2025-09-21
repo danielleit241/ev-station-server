@@ -31,7 +31,7 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
                 if (responseJson == null)
                     return null;
                 var identityCard = JsonSerializer.Deserialize<IdentityCardScanResponse>(responseJson, JsonOptions());
-                if (identityCard == null)
+                if (identityCard == null || !IsValidIdentityCard(identityCard))
                     return null;
                 return identityCard;
             }
@@ -40,6 +40,25 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
                 Console.WriteLine(ex);
                 return null;
             }
+        }
+
+        public static bool IsValidIdentityCard(IdentityCardScanResponse data, int maxNullAllowed = 3)
+        {
+            if (data == null)
+                return false;
+            int nullOrEmptyCount = 0;
+
+            if (string.IsNullOrWhiteSpace(data.CardNumber)) return false;
+            if (string.IsNullOrWhiteSpace(data.FullName)) nullOrEmptyCount++;
+            if (string.IsNullOrWhiteSpace(data.Sex)) nullOrEmptyCount++;
+            if (string.IsNullOrWhiteSpace(data.Nationality)) nullOrEmptyCount++;
+            if (string.IsNullOrWhiteSpace(data.PlaceOfOrigin)) nullOrEmptyCount++;
+            if (string.IsNullOrWhiteSpace(data.PlaceOfResidence)) nullOrEmptyCount++;
+            if (!data.DateOfBirth.HasValue) nullOrEmptyCount++;
+            if (data.CreateDate == default) nullOrEmptyCount++;
+            if (data.DayOfExpiry == default) nullOrEmptyCount++;
+
+            return nullOrEmptyCount <= maxNullAllowed;
         }
 
         public async Task<DriverLisenceScanResponse?> ExtractDriverLisenceInfoAsync(string rawOcrText)

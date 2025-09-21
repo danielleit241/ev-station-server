@@ -1,7 +1,10 @@
-﻿namespace EV_Station.Application.Common.Abstractions.IServices
+﻿using Microsoft.AspNetCore.Http;
+
+namespace EV_Station.Application.Common.Abstractions.IServices
 {
     public interface ITesseractOcrService
     {
-        Task<string> ExtractTextFromImageAsync(string imageUrl);
+        Task<string> ExtractTextFromImageUrlAsync(string imageUrl);
+        Task<string> ExtractTextFromImageFileAsync(IFormFile formFile);
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace EV_Station.Api.Extensions
+
+﻿using Microsoft.AspNetCore.Http.Features;
+
+namespace EV_Station.Api.Extensions
 {
     public static class ApplicationServiceExtensions
     {
@@ -6,6 +9,11 @@
         {
             builder.Services.AddEndpointsApiExplorer();
             SwaggerExtensions.AddSwagger(builder);
+
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 104857600;
+            });
 
             AddDbContext(builder);
             ApiVersioningExtensions.AddApiVersioning(builder);
@@ -19,7 +27,7 @@
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddAuthorization();
             builder.Services.AddMediatR(typeof(RegisterUser).Assembly);
-            builder.Services.AddMediatR(typeof(IdentityCardScanHandler).Assembly);
+            builder.Services.AddMediatR(typeof(IdentityCardScanUrlHandler).Assembly);
 
             builder.Services.AddAutoMapper(typeof(UserProfile));
             builder.Services.AddAutoMapper(typeof(IdentityCardProfile));

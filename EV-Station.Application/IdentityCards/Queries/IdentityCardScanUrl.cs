@@ -5,5 +5,5 @@ using MediatR;
 
 namespace EV_Station.Application.IdentityCards.Queries
 {
-    public record IdentityCardScan(IdentityCardScanRequest dto) : IRequest<GenericApiResponse<IdentityCardScanResponse>>;
+    public record IdentityCardScanUrl(IdentityCardScanUrlRequest dto) : IRequest<GenericApiResponse<IdentityCardScanResponse>>;
 }
