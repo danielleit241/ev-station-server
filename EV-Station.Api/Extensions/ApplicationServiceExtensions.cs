@@ -1,6 +1,4 @@
 
-﻿using Microsoft.AspNetCore.Http.Features;
-
 namespace EV_Station.Api.Extensions
 {
     public static class ApplicationServiceExtensions

@@ -15,11 +15,13 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .Accepts<IFormFile>("multipart/form-data")
                 .WithName("ScanIdentityCardFile")
                 .RequireAuthorization()
-                .DisableAntiforgery();
+                .DisableAntiforgery()
+                .WithMetadata(new RequestSizeLimitAttribute(104857600));
 
             v1.MapPost("/create", CreateIdentityCard)
                 .WithName("CreateIdentityCard")
                 .RequireAuthorization();
+
             v1.MapGet("/{id}", GetMyIdentityCard)
                 .WithName("GetMyIdentityCard")
                 .RequireAuthorization();

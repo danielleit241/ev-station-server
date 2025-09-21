@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EV_Station.Application.IdentityCards.DTOs.Requests
+namespace EV_Station.Application.DriverLisences.DTOs.Requests
 {
-    public class IdentityCardScanUrlRequest
+    public class DriverLisenceScanUrlRequest
     {
         [Required]
         public string FrontImageUrl { get; set; } = default!;

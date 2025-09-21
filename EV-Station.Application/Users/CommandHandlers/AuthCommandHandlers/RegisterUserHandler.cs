@@ -34,7 +34,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 }
 
                 var user = await GetRegisterUserAsync(request);
-                await userRepo.AddAsync(user);
+                userRepo.Add(user);
                 var userResponse = _mapper.Map<UserResponseDto>(user);
 
 

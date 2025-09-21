@@ -42,6 +42,40 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
             }
         }
 
+        public async Task<DriverLisenceScanResponse?> ExtractDriverLisenceInfoAsync(string rawOcrText)
+        {
+            try
+            {
+                var prompt = Prompts.DriverLisencePrompt(rawOcrText);
+                var responseJson = await QueryGeminiAiAsync(prompt);
+                var driverLisence = JsonSerializer.Deserialize<DriverLisenceScanResponse>(responseJson, JsonOptions());
+                if (driverLisence == null || !IsValidDriverLicense(driverLisence))
+                    return null;
+                return driverLisence;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
+        public static bool IsValidDriverLicense(DriverLisenceScanResponse data, int maxNullAllowed = 3)
+        {
+            if (data is null)
+                return false;
+            int nullOrEmptyCount = 0;
+            if (string.IsNullOrWhiteSpace(data.LicenseNumber)) return false;
+            if (string.IsNullOrWhiteSpace(data.FullName)) nullOrEmptyCount++;
+            if (string.IsNullOrWhiteSpace(data.Nationality)) nullOrEmptyCount++;
+            if (string.IsNullOrWhiteSpace(data.Address)) nullOrEmptyCount++;
+            if (data.LicenseClass == 0) nullOrEmptyCount++;
+            if (!data.ExpiresDate.HasValue) nullOrEmptyCount++;
+            if (data.DateOfBirth == default) nullOrEmptyCount++;
+
+            return nullOrEmptyCount <= maxNullAllowed;
+        }
+
         public static bool IsValidIdentityCard(IdentityCardScanResponse data, int maxNullAllowed = 3)
         {
             if (data == null)
@@ -59,24 +93,6 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
             if (data.DayOfExpiry == default) nullOrEmptyCount++;
 
             return nullOrEmptyCount <= maxNullAllowed;
-        }
-
-        public async Task<DriverLisenceScanResponse?> ExtractDriverLisenceInfoAsync(string rawOcrText)
-        {
-            try
-            {
-                var prompt = Prompts.DriverLisencePrompt(rawOcrText);
-                var responseJson = await QueryGeminiAiAsync(prompt);
-                var driverLisence = JsonSerializer.Deserialize<DriverLisenceScanResponse>(responseJson, JsonOptions());
-                if (driverLisence == null)
-                    return null;
-                return driverLisence;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return null;
-            }
         }
 
         public async Task<string> QueryGeminiAiAsync(string prompt)

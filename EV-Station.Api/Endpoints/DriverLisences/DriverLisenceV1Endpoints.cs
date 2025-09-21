@@ -11,13 +11,26 @@ namespace EV_Station.Api.Endpoints.DriverLisences
         {
             var v1 = application.MapGroup("api/v{version:apiVersion}/driver-licenses").WithApiVersionSet().HasApiVersion(1, 0);
 
-            v1.MapPost("/scan", ScanDriverLisence)
-                .WithName("Scan");
+            v1.MapPost("/scan-url", ScanUrlDriverLisence)
+                .WithName("Scan Url");
+
+            v1.MapPost("/scan-file", ScanFileDriverLisence)
+                .WithName("Scan File")
+                .Accepts<IFormFile>("multipart/form-data")
+                .DisableAntiforgery()
+                .WithMetadata(new RequestSizeLimitAttribute(104857600));
         }
 
-        private async Task<Results<Ok<GenericApiResponse<DriverLisenceScanResponse>>, NotFound>> ScanDriverLisence(DriverLisenceScanRequest request, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<DriverLisenceScanResponse>>, NotFound>> ScanFileDriverLisence([FromForm] DriverLisenceScanFileRequest request, IMediator mediator)
         {
-            var driverLisenceScanCommand = new DriverLisenceScan(request);
+            var driverLisenceScanCommand = new DriverLisenceScanFile(request);
+            var result = await mediator.Send(driverLisenceScanCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<DriverLisenceScanResponse>>, NotFound>> ScanUrlDriverLisence(DriverLisenceScanUrlRequest request, IMediator mediator)
+        {
+            var driverLisenceScanCommand = new DriverLisenceScanUrl(request);
             var result = await mediator.Send(driverLisenceScanCommand);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }

@@ -41,7 +41,7 @@ namespace EV_Station.Application.Users.CommandHandlers.AuthCommandHandlers
                 else
                 {
                     user = await GetRegisterUserAsync(payload);
-                    await _uow.Users.AddAsync(user);
+                    _uow.Users.Add(user);
                     await _uow.SaveChangesAsync(cancellationToken);
                 }
 

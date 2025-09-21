@@ -4,6 +4,7 @@ using EV_Station.Infrastructure.Persistence.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EV_Station.Infrastructure.Migrations
 {
     [DbContext(typeof(EVStationDbContext))]
-    partial class EVStationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250921080835_ChangeDateTimetoDateOnly")]
+    partial class ChangeDateTimetoDateOnly
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -21,42 +21,31 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
 
         public async Task<GenericApiResponse<IdentityCardResponse>> Handle(CreateIdentityCard request, CancellationToken cancellationToken)
         {
-            await _uow.BeginTransactionAsync();
-            try
+            var identityCardRepository = _uow.IdentityCards;
+            var identityCards = await identityCardRepository.GetAllAsync();
+
+            var userHasIdentityCard = identityCards.Any(ic => ic.UserId == request.userId);
+
+            if (userHasIdentityCard)
             {
-                var identityCardRepository = _uow.IdentityCards;
-                var userRepository = _uow.Users;
-
-                var identityCards = await identityCardRepository.GetAllAsync();
-                var userHasIdentityCard = identityCards.Any(ic => ic.UserId == request.userId);
-
-                if (userHasIdentityCard)
-                {
-                    return GenericApiResponse<IdentityCardResponse>.FailResponse("User already has an identity card.");
-                }
-
-                var existingIdentityCard = await identityCardRepository.GetIdentityCardByNumber(request.dto.CardNumber);
-
-                if (existingIdentityCard != null)
-                {
-                    return GenericApiResponse<IdentityCardResponse>.FailResponse("User already owns this card number.");
-                }
-
-                var newIdentityCard = _mapper.Map<IdentityCard>(request.dto);
-                newIdentityCard.UserId = request.userId;
-                await identityCardRepository.AddAsync(newIdentityCard);
-
-                await _uow.SaveChangesAsync(cancellationToken);
-                await _uow.CommitAsync();
-                var response = _mapper.Map<IdentityCardResponse>(newIdentityCard);
-                return GenericApiResponse<IdentityCardResponse>.SuccessResponse(response);
-            }
-            catch
-            {
-                await _uow.RollbackAsync();
-                return GenericApiResponse<IdentityCardResponse>.FailResponse("An error occurred while creating the identity card.");
+                return GenericApiResponse<IdentityCardResponse>.FailResponse("User already has an identity card.");
             }
 
+            var existingIdentityCard = identityCards.Any(ic => ic.CardNumber == request.dto.CardNumber);
+
+            if (!existingIdentityCard)
+            {
+                return GenericApiResponse<IdentityCardResponse>.FailResponse("Identity card with the same card number already exists.");
+            }
+
+            var newIdentityCard = _mapper.Map<IdentityCard>(request.dto);
+            newIdentityCard.UserId = request.userId;
+
+            identityCardRepository.Add(newIdentityCard);
+            await _uow.SaveChangesAsync(cancellationToken);
+
+            var response = _mapper.Map<IdentityCardResponse>(newIdentityCard);
+            return GenericApiResponse<IdentityCardResponse>.SuccessResponse(response);
         }
     }
 }

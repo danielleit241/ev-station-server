@@ -63,6 +63,7 @@ namespace EV_Station.Infrastructure.Services
 
             return new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         }
+
         private DateTime GetExpries() => DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Authentication:Jwt:ExpiresMinutes"] ?? "30"));
     }
 }

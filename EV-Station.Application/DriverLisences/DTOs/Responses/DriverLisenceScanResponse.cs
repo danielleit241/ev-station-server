@@ -6,7 +6,7 @@ namespace EV_Station.Application.DriverLisences.DTOs.Responses
     {
         public string LicenseNumber { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
-        public DateTime? DateOfBirth { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
         public string Nationality { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public LicenseClass LicenseClass { get; set; }
