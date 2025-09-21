@@ -1,5 +1,3 @@
-using EV_Station.Infrastructure.Persistence.SqlServer.Data;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApplicationServices();

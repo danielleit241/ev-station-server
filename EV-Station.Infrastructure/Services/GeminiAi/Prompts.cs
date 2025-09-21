@@ -10,7 +10,7 @@ Dữ liệu OCR:
 
 Yêu cầu:
 1. Chỉ trích xuất và trả về các thông tin sau dưới dạng JSON tiếng Việt hợp lệ:
-    - LicenseNumber (số căn cước)
+    - CardNumber (số căn cước)
     - FullName (họ tên)
     - Sex (giới tính)
     - Nationality (quốc tịch)

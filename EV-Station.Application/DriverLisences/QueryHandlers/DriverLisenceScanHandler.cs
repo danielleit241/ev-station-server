@@ -18,8 +18,8 @@ namespace EV_Station.Application.DriverLisences.QueryHandlers
 
         public async Task<GenericApiResponse<DriverLisenceScanResponse>> Handle(DriverLisenceScan request, CancellationToken cancellationToken)
         {
-            var rawOcrFrontText = await _tesseractOcrService.ExtractTextFromImageAsync(request.dto.FrontImageUrl);
-            var rawOcrBackText = await _tesseractOcrService.ExtractTextFromImageAsync(request.dto.BackImageUrl);
+            var rawOcrFrontText = await _tesseractOcrService.ExtractTextFromImageUrlAsync(request.dto.FrontImageUrl);
+            var rawOcrBackText = await _tesseractOcrService.ExtractTextFromImageUrlAsync(request.dto.BackImageUrl);
 
             var rawOcrText = rawOcrFrontText + "\n" + rawOcrBackText;
             var result = await _geminiAi.ExtractDriverLisenceInfoAsync(rawOcrText);
