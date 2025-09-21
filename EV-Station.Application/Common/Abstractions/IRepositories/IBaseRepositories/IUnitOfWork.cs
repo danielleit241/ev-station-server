@@ -5,6 +5,8 @@
         IUserRepository Users { get; }
         IRoleRepository Roles { get; }
         IProviderRepository Providers { get; }
+        IIdentityCardRepository IdentityCards { get; }
+
 
 
 

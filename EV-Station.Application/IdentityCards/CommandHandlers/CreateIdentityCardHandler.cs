@@ -24,23 +24,23 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
             await _uow.BeginTransactionAsync();
             try
             {
-                var identityCardRepository = _uow.Repository<IdentityCard>();
+                var identityCardRepository = _uow.IdentityCards;
                 var userRepository = _uow.Users;
 
-                var userHasIdentityCard = (await identityCardRepository.GetAllAsync(ic => ic.UserId == request.userId)).Any();
+                var identityCards = await identityCardRepository.GetAllAsync();
+                var userHasIdentityCard = identityCards.Any(ic => ic.UserId == request.userId);
+
                 if (userHasIdentityCard)
                 {
                     return GenericApiResponse<IdentityCardResponse>.FailResponse("User already has an identity card.");
                 }
 
-                var existingIdentityCard = (await identityCardRepository.GetAllAsync(ic => ic.UserId == request.userId && ic.CardNumber == request.dto.CardNumber))
-                    .FirstOrDefault();
+                var existingIdentityCard = await identityCardRepository.GetIdentityCardByNumber(request.dto.CardNumber);
+
                 if (existingIdentityCard != null)
                 {
                     return GenericApiResponse<IdentityCardResponse>.FailResponse("User already owns this card number.");
                 }
-
-
 
                 var newIdentityCard = _mapper.Map<IdentityCard>(request.dto);
                 newIdentityCard.UserId = request.userId;

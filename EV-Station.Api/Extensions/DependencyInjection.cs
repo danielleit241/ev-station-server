@@ -1,6 +1,4 @@
-﻿using EV_Station.Infrastructure.Persistence.SqlServer.Data;
-
-namespace EV_Station.Api.Extensions
+﻿namespace EV_Station.Api.Extensions
 {
     public static class DependencyInjection
     {
@@ -23,7 +21,7 @@ namespace EV_Station.Api.Extensions
         {
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-            //builder.Services.AddScoped<IIdentityCardRepository, IdentityCardRepository>();
+            builder.Services.AddScoped<IIdentityCardRepository, IdentityCardRepository>();
 
             return builder;
         }

@@ -1,7 +1,7 @@
-﻿using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
+﻿using System.Linq.Expressions;
+using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories;
 using EV_Station.Infrastructure.Persistence.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace EV_Station.Infrastructure.Repositories.BaseRepositories
 {
