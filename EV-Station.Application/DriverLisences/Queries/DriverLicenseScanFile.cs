@@ -5,5 +5,5 @@ using MediatR;
 
 namespace EV_Station.Application.DriverLisences.Queries
 {
-    public record DriverLisenceScanUrl(DriverLisenceScanUrlRequest dto) : IRequest<GenericApiResponse<DriverLisenceScanResponse>>;
+    public record DriverLicenseScanFile(DriverLisenceScanFileRequest dto) : IRequest<GenericApiResponse<DriverLicenseScanResponse>>;
 }

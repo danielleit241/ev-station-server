@@ -2,7 +2,7 @@
 
 namespace EV_Station.Application.DriverLisences.DTOs.Responses
 {
-    public class DriverLisenceScanResponse
+    public class DriverLicenseScanResponse
     {
         public string LicenseNumber { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;

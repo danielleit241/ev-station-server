@@ -5,9 +5,9 @@ using MediatR;
 
 namespace EV_Station.Application.DriverLisences.QueryHandlers
 {
-    public class GetDriverLisenceByIdHandler : IRequestHandler<GetDriverLisenceById, GenericApiResponse<DriverLisenceScanResponse>>
+    public class GetDriverLisenceByIdHandler : IRequestHandler<GetDriverLicenseById, GenericApiResponse<DriverLicenseScanResponse>>
     {
-        public Task<GenericApiResponse<DriverLisenceScanResponse>> Handle(GetDriverLisenceById request, CancellationToken cancellationToken)
+        public Task<GenericApiResponse<DriverLicenseScanResponse>> Handle(GetDriverLicenseById request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

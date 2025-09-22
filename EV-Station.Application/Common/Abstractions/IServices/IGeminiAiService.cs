@@ -6,7 +6,7 @@ namespace EV_Station.Application.Common.Abstractions.IServices
     public interface IGeminiAiService
     {
         Task<string?> DetermineFrontOrBackOfCardAsync(string rawOcrText);
-        Task<DriverLisenceScanResponse?> ExtractDriverLisenceInfoAsync(string rawOcrText);
+        Task<DriverLicenseScanResponse?> ExtractDriverLicenseInfoAsync(string rawOcrText);
         Task<IdentityCardScanResponse?> ExtractIdentityCardInfoAsync(string rawOcrText);
 
     }

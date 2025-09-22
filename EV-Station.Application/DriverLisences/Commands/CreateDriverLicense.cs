@@ -5,5 +5,5 @@ using MediatR;
 
 namespace EV_Station.Application.DriverLisences.Commands
 {
-    public record CreateDriverLisence(DriverLicenseRequest dto) : IRequest<GenericApiResponse<DriverLicenseResponse>>;
+    public record CreateDriverLicense(Guid userId, DriverLicenseRequest dto) : IRequest<GenericApiResponse<DriverLicenseResponse>>;
 }

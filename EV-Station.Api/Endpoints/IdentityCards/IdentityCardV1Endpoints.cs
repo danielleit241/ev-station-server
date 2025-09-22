@@ -7,6 +7,14 @@ namespace EV_Station.Api.Endpoints.IdentityCards
         {
             var v1 = application.MapGroup("api/v{version:apiVersion}/identity-cards").WithApiVersionSet().HasApiVersion(1, 0);
 
+            v1.MapPost("", CreateIdentityCard)
+               .WithName("CreateIdentityCard")
+               .RequireAuthorization();
+
+            v1.MapGet("/{cardNumber:string}", GetIdentityCardById)
+                .WithName("GetIdentityCardById")
+                .RequireAuthorization();
+
             v1.MapPost("/scan-url", ScanIdentityCardUrl)
                 .WithName("ScanIdentityCardUrl")
                 .RequireAuthorization();
@@ -17,19 +25,10 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .RequireAuthorization()
                 .DisableAntiforgery()
                 .WithMetadata(new RequestSizeLimitAttribute(104857600));
-
-            v1.MapPost("/create", CreateIdentityCard)
-                .WithName("CreateIdentityCard")
-                .RequireAuthorization();
-
-            v1.MapGet("/{id}", GetMyIdentityCard)
-                .WithName("GetMyIdentityCard")
-                .RequireAuthorization();
         }
 
-        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetMyIdentityCard([FromBody] string cardNumber, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardById(string cardNumber, IMediator mediator)
         {
-
             var getMyIdentityCardQuery = new GetIdentityCardById(cardNumber);
             var result = await mediator.Send(getMyIdentityCardQuery);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();

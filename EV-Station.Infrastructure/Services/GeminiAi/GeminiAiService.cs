@@ -62,13 +62,13 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
             }
         }
 
-        public async Task<DriverLisenceScanResponse?> ExtractDriverLisenceInfoAsync(string rawOcrText)
+        public async Task<DriverLicenseScanResponse?> ExtractDriverLicenseInfoAsync(string rawOcrText)
         {
             try
             {
                 var prompt = Prompts.DriverLisencePrompt(rawOcrText);
                 var responseJson = await QueryGeminiAiAsync(prompt);
-                var driverLisence = JsonSerializer.Deserialize<DriverLisenceScanResponse>(responseJson, JsonOptions());
+                var driverLisence = JsonSerializer.Deserialize<DriverLicenseScanResponse>(responseJson, JsonOptions());
                 if (driverLisence == null || !IsValidDriverLicense(driverLisence))
                     return null;
                 return driverLisence;
@@ -80,7 +80,7 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
             }
         }
 
-        public static bool IsValidDriverLicense(DriverLisenceScanResponse data, int maxNullAllowed = 3)
+        public static bool IsValidDriverLicense(DriverLicenseScanResponse data, int maxNullAllowed = 3)
         {
             if (data is null)
                 return false;
