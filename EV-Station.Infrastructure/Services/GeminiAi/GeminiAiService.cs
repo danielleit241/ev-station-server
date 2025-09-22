@@ -22,6 +22,26 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
             _endpoint = configuration["GeminiAi:Endpoint"]!;
         }
 
+        public async Task<string?> DetermineFrontOrBackOfCardAsync(string rawOcrText)
+        {
+            try
+            {
+                var prompt = Prompts.GetFrontOrBackOfCardPrompt(rawOcrText);
+                var response = await QueryGeminiAiAsync(prompt);
+                if (string.IsNullOrWhiteSpace(response))
+                    return null;
+                response = response.Trim().ToUpper();
+                if (response == "FRONT" || response == "BACK")
+                    return response;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
         public async Task<IdentityCardScanResponse?> ExtractIdentityCardInfoAsync(string rawOcrText)
         {
             try

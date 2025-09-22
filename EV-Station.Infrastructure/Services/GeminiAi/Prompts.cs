@@ -3,6 +3,20 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
 {
     public class Prompts
     {
+        public static string GetFrontOrBackOfCardPrompt(string rawOcrText) => $@"Bạn là một hệ thống kiểm tra giấy tờ.  
+Phân tích ảnh Căn cước công dân (CCCD) hoặc Giấy phép lái xe (GPLX).  
+Nhiệm vụ: Xác định thông tin đoạn text này là mặt trước (FRONT) hay mặt sau (BACK).  
+
+Dữ liệu OCR:
+{rawOcrText}
+
+Quy tắc:
+- Nếu là CCCD hoặc GPLX mặt trước → trả về đúng chữ ""FRONT"".
+- Nếu là CCCD hoặc GPLX mặt sau → trả về đúng chữ ""BACK"".
+- Không giải thích thêm, không trả về gì khác ngoài ""FRONT"" hoặc ""BACK"".
+- Nếu không chắc chắn, trả về chuỗi rỗng ("").
+";
+
         public static string IdentityCardPrompt(string rawOcrText) => $@"Hãy chuẩn hóa thông tin căn cước công dân Việt Nam dựa trên dữ liệu OCR.
 
 Dữ liệu OCR:
