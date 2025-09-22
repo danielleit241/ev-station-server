@@ -1,5 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600;
+});
+
 builder.AddApplicationServices();
 
 var app = builder.Build();

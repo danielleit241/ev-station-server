@@ -8,11 +8,6 @@ namespace EV_Station.Api.Extensions
             builder.Services.AddEndpointsApiExplorer();
             SwaggerExtensions.AddSwagger(builder);
 
-            builder.Services.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = 104857600;
-            });
-
             AddDbContext(builder);
             ApiVersioningExtensions.AddApiVersioning(builder);
             CorsExtensions.AddCors(builder);

@@ -19,6 +19,22 @@
             {
                 await _next(context);
             }
+            catch (BadHttpRequestException badEx)
+            {
+                _logger.LogError(badEx, "Bad HTTP request exception occurred");
+
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.RequestEntityTooLarge;
+
+                var response = new
+                {
+                    statusCode = context.Response.StatusCode,
+                    message = "File quá lớn hoặc vượt giới hạn upload. Vui lòng kiểm tra lại cấu hình server hoặc dung lượng file."
+                };
+
+                var json = JsonSerializer.Serialize(response);
+                await context.Response.WriteAsync(json);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unhandled exception occurred");
