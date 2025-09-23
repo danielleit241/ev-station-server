@@ -19,15 +19,19 @@ namespace EV_Station.Application.IdentityCards.QueryHandlers
         public async Task<GenericApiResponse<IdentityCardScanResponse>> Handle(IdentityCardScanFile request, CancellationToken cancellationToken)
         {
             var rawOcrFrontText = await _tesseractOcrService.ExtractTextFromImageFileAsync(request.dto.FrontImage);
-            if (_geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrFrontText).Result != "FRONT")
+            await Task.Delay(2000, cancellationToken);
+            var isFront = await _geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrFrontText);
+            if (isFront != "FRONT" || string.IsNullOrWhiteSpace(isFront))
             {
-                return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt trước không đúng định dạng. Vui lòng gửi ảnh mặt trước của Căn cước công dân hoặc Giấy phép lái xe.");
+                return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt trước không đúng định dạng. Vui lòng gửi ảnh mặt trước của Căn cước công dân.");
             }
 
             var rawOcrBackText = await _tesseractOcrService.ExtractTextFromImageFileAsync(request.dto.BackImage);
-            if (_geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrBackText).Result != "BACK")
+            await Task.Delay(2000, cancellationToken);
+            var isBack = await _geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrBackText);
+            if (isBack != "BACK" || string.IsNullOrWhiteSpace(isBack))
             {
-                return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt sau không đúng định dạng. Vui lòng gửi ảnh mặt sau của Căn cước công dân hoặc Giấy phép lái xe.");
+                return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt sau không đúng định dạng. Vui lòng gửi ảnh mặt sau của Căn cước công dân.");
             }
 
             var rawOcrText = rawOcrFrontText + "\n" + rawOcrBackText;
@@ -44,7 +48,5 @@ namespace EV_Station.Application.IdentityCards.QueryHandlers
 
             return GenericApiResponse<IdentityCardScanResponse>.SuccessResponse(result);
         }
-
-
     }
 }

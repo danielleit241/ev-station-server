@@ -20,13 +20,17 @@ namespace EV_Station.Application.IdentityCards.QueryHandlers
         public async Task<GenericApiResponse<IdentityCardScanResponse>> Handle(IdentityCardScanUrl request, CancellationToken cancellationToken)
         {
             var rawOcrFrontText = await _tesseractOcrService.ExtractTextFromImageUrlAsync(request.dto.FrontImageUrl);
-            if (_geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrFrontText).Result != "FRONT")
+            await Task.Delay(2000, cancellationToken);
+            var isFront = await _geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrFrontText);
+            if (isFront != "FRONT")
             {
                 return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt trước không đúng định dạng. Vui lòng gửi ảnh mặt trước của Căn cước công dân hoặc Giấy phép lái xe.");
             }
 
             var rawOcrBackText = await _tesseractOcrService.ExtractTextFromImageUrlAsync(request.dto.BackImageUrl);
-            if (_geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrBackText).Result != "BACK")
+            await Task.Delay(2000, cancellationToken);
+            var isBack = await _geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrBackText);
+            if (isBack != "BACK")
             {
                 return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt sau không đúng định dạng. Vui lòng gửi ảnh mặt sau của Căn cước công dân hoặc Giấy phép lái xe.");
             }

@@ -33,7 +33,7 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
                 response = response.Trim().ToUpper();
                 if (response == "FRONT" || response == "BACK")
                     return response;
-                return null;
+                return "";
             }
             catch (Exception ex)
             {
@@ -117,27 +117,35 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
 
         public async Task<string> QueryGeminiAiAsync(string prompt)
         {
-            var requestObj = PrepareRequest(prompt);
+            try
+            {
+                var requestObj = PrepareRequest(prompt);
+                _httpClient.DefaultRequestHeaders.Remove("X-goog-api-key");
+                _httpClient.DefaultRequestHeaders.Add("X-goog-api-key", _apiKey);
+                var content = new StringContent(
+                    JsonSerializer.Serialize(requestObj),
+                    Encoding.UTF8,
+                    "application/json"
+                );
 
-            _httpClient.DefaultRequestHeaders.Add("X-goog-api-key", _apiKey);
-            var content = new StringContent(
-                JsonSerializer.Serialize(requestObj),
-                Encoding.UTF8,
-                "application/json"
-            );
+                var response = await _httpClient.PostAsync(_endpoint, content);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responseBody);
 
-            var response = await _httpClient.PostAsync(_endpoint, content);
-            var responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseBody);
+                string extractedJson = ExtractJson(responseBody);
 
-            string extractedJson = ExtractJson(responseBody);
+                Console.WriteLine(extractedJson);
 
-            Console.WriteLine(extractedJson);
+                if (string.IsNullOrWhiteSpace(extractedJson))
+                    return null!;
 
-            if (string.IsNullOrWhiteSpace(extractedJson))
+                return RemoveCodeFence(extractedJson);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
                 return null!;
-
-            return RemoveCodeFence(extractedJson);
+            }
         }
 
         private static GeminiRequest PrepareRequest(string prompt)

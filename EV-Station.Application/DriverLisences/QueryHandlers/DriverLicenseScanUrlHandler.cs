@@ -19,13 +19,17 @@ namespace EV_Station.Application.DriverLisences.QueryHandlers
         public async Task<GenericApiResponse<DriverLicenseScanResponse>> Handle(DriverLicenseScanUrl request, CancellationToken cancellationToken)
         {
             var rawOcrFrontText = await _tesseractOcrService.ExtractTextFromImageUrlAsync(request.dto.FrontImageUrl);
-            if (_geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrFrontText).Result != "FRONT")
+            await Task.Delay(2000, cancellationToken);
+            var isFront = await _geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrFrontText);
+            if (isFront != "FRONT")
             {
                 return GenericApiResponse<DriverLicenseScanResponse>.FailResponse("Ảnh mặt trước không đúng định dạng. Vui lòng gửi ảnh mặt trước của Giấy phép lái xe.");
             }
 
             var rawOcrBackText = await _tesseractOcrService.ExtractTextFromImageUrlAsync(request.dto.BackImageUrl);
-            if (_geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrBackText).Result != "BACK")
+            await Task.Delay(2000, cancellationToken);
+            var isBack = await _geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrBackText);
+            if (isBack != "BACK")
             {
                 return GenericApiResponse<DriverLicenseScanResponse>.FailResponse("Ảnh mặt sau không đúng định dạng. Vui lòng gửi ảnh mặt sau của Giấy phép lái xe.");
             }

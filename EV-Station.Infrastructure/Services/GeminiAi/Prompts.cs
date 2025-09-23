@@ -4,13 +4,18 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
     public class Prompts
     {
         public static string GetFrontOrBackOfCardPrompt(string rawOcrText) => $@"Bạn là một hệ thống kiểm tra giấy tờ.  
-Phân tích ảnh Căn cước công dân (CCCD) hoặc Giấy phép lái xe (GPLX).  
+Phân tích các thông tin Căn cước công dân (CCCD) hoặc Giấy phép lái xe (GPLX).  
 Nhiệm vụ: Xác định thông tin đoạn text này là mặt trước (FRONT) hay mặt sau (BACK).  
 
 Dữ liệu OCR:
 {rawOcrText}
 
-Quy tắc:
+Quy tắc nhận diện:
+- Dữ liệu OCR có thể chứa lỗi chính tả. Hãy sửa lỗi chính tả và sau đó tập trung vào việc nhận diện các từ khóa quan trọng.
+- Từ khóa nhận diện mặt trước CCCD/GPLX: ""CĂN CƯỚC CÔNG DÂN"", ""GIẤY PHÉP LÁI XE"", ""HỌ VÀ TÊN"", ""SỐ"", ""NGÀY SINH"", ""QUỐC TỊCH"", ""ĐỊA CHỈ"".
+- Từ khóa nhận diện mặt sau CCCD/GPLX: ""NGÀY CẤP"", ""NƠI CẤP"", ""HẠN ĐẾN"", ""LOẠI XE"", ""HẠNG"", ""SỐ KHUNG"", ""SỐ MÁY"".
+
+Quy tắc trả về:
 - Nếu là CCCD hoặc GPLX mặt trước → trả về đúng chữ ""FRONT"".
 - Nếu là CCCD hoặc GPLX mặt sau → trả về đúng chữ ""BACK"".
 - Không giải thích thêm, không trả về gì khác ngoài ""FRONT"" hoặc ""BACK"".

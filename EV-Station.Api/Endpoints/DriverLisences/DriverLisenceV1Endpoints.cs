@@ -22,8 +22,7 @@ namespace EV_Station.Api.Endpoints.DriverLisences
             v1.MapPost("/scan-file", ScanFileDriverLisence)
                 .WithName("Scan File")
                 .Accepts<IFormFile>("multipart/form-data")
-                .DisableAntiforgery()
-                .WithMetadata(new RequestSizeLimitAttribute(104857600));
+                .DisableAntiforgery();
         }
 
         private async Task<Results<Ok<GenericApiResponse<DriverLicenseResponse>>, NotFound>> CreateDriverLicense(ICurrentUserService currentUser, DriverLicenseRequest request, IMediator mediator)

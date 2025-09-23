@@ -11,7 +11,7 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                .WithName("CreateIdentityCard")
                .RequireAuthorization();
 
-            v1.MapGet("/{cardNumber:string}", GetIdentityCardById)
+            v1.MapGet("/{cardNumber}", GetIdentityCardById)
                 .WithName("GetIdentityCardById")
                 .RequireAuthorization();
 
@@ -23,8 +23,7 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .Accepts<IFormFile>("multipart/form-data")
                 .WithName("ScanIdentityCardFile")
                 .RequireAuthorization()
-                .DisableAntiforgery()
-                .WithMetadata(new RequestSizeLimitAttribute(104857600));
+                .DisableAntiforgery();
         }
 
         private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardById(string cardNumber, IMediator mediator)

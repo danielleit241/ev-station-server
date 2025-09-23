@@ -2,8 +2,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = 104857600;
+    options.MultipartBodyLengthLimit = 268_435_456;
+    options.MemoryBufferThreshold = 64 * 1024;
+    options.MultipartHeadersLengthLimit = 64 * 1024;
+    options.ValueLengthLimit = int.MaxValue;
+    options.ValueCountLimit = int.MaxValue;
 });
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = null;
+});
+
 
 builder.AddApplicationServices();
 
