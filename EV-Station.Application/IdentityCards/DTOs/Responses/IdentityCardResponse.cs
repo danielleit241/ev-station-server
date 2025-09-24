@@ -4,7 +4,6 @@ namespace EV_Station.Application.IdentityCards.DTOs.Responses
 {
     public class IdentityCardResponse
     {
-        public long Id { get; set; }
         public string CardNumber { get; set; } = default!;
         public string FullName { get; set; } = default!;
         public DateOnly DateOfBirth { get; set; }
@@ -15,5 +14,6 @@ namespace EV_Station.Application.IdentityCards.DTOs.Responses
         public string? FrontImageUrl { get; set; }
         public string? BackImageUrl { get; set; }
         public VerificationStatus Status { get; set; }
+        public Guid UserId { get; set; } = default!;
     }
 }

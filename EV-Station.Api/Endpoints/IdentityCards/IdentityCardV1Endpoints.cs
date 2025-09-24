@@ -1,4 +1,8 @@
 ﻿
+
+
+
+
 namespace EV_Station.Api.Endpoints.IdentityCards
 {
     public class IdentityCardV1Endpoints : IEndpointDefinition
@@ -11,7 +15,7 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                .WithName("CreateIdentityCard")
                .RequireAuthorization();
 
-            v1.MapGet("/{cardNumber}", GetIdentityCardById)
+            v1.MapGet("/{id:Guid}", GetIdentityCardById)
                 .WithName("GetIdentityCardById")
                 .RequireAuthorization();
 
@@ -24,11 +28,57 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .WithName("ScanIdentityCardFile")
                 .RequireAuthorization()
                 .DisableAntiforgery();
+
+            v1.MapGet("", GetAllIdentityCard)
+                .WithName("GetAllIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+
+            v1.MapDelete("/{id:Guid}", DeleteIdentityCard)
+                .WithName("DeleteIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+            v1.MapPut("/{id:Guid}", UpdateIdentityCard)
+                .WithName("UpdateIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+            v1.MapPut("/verify/{cardNumber}", VerifyIdentityCard)
+                .WithName("ConfirmIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+
         }
 
-        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardById(string cardNumber, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> VerifyIdentityCard(string cardNumber, [FromBody] string status, IMediator mediator)
         {
-            var getMyIdentityCardQuery = new GetIdentityCardById(cardNumber);
+            var verifyIdentityCardCommand = new VerifyIdentityCard(cardNumber, status);
+            var result = await mediator.Send(verifyIdentityCardCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> UpdateIdentityCard(Guid id, [FromBody] IdentityCardRequest request, IMediator mediator)
+        {
+            var updateIdentityCardCommand = new UpdateIdentityCard(id, request);
+            var result = await mediator.Send(updateIdentityCardCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> DeleteIdentityCard(Guid id, IMediator mediator)
+        {
+            var deleteIdentityCardCommand = new DeleteIdentityCard(id);
+            var result = await mediator.Send(deleteIdentityCardCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<ICollection<IdentityCardResponse>>>, NotFound>> GetAllIdentityCard(IMediator mediator)
+        {
+            var getAllIdentityCardQuery = new GetAllIdentityCards();
+            var result = await mediator.Send(getAllIdentityCardQuery);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardById(Guid id, IMediator mediator)
+        {
+            var getMyIdentityCardQuery = new GetIdentityCardById(id);
             var result = await mediator.Send(getMyIdentityCardQuery);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }

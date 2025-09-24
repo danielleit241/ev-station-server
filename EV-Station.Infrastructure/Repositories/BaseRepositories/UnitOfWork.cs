@@ -15,6 +15,8 @@ namespace EV_Station.Infrastructure.Repositories.BaseRepositories
         private IRoleRepository? _roleRepository;
         private IProviderRepository? _providerRepository;
         private IIdentityCardRepository? _identityCardRepository;
+        private IDriverLicenseRepository? _driverLicenseRepository;
+
         public IUserRepository Users
         {
             get
@@ -44,6 +46,14 @@ namespace EV_Station.Infrastructure.Repositories.BaseRepositories
             get
             {
                 return _identityCardRepository ??= new IdentityCardRepository(_context);
+            }
+        }
+
+        public IDriverLicenseRepository DriverLicenses
+        {
+            get
+            {
+                return _driverLicenseRepository ??= new DriverLicenseRepository(_context);
             }
         }
 
