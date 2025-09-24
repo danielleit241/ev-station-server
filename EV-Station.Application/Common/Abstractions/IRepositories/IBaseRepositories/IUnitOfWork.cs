@@ -6,6 +6,7 @@
         IRoleRepository Roles { get; }
         IProviderRepository Providers { get; }
         IIdentityCardRepository IdentityCards { get; }
+        IDriverLicenseRepository DriverLicenses { get; }
 
 
 
