@@ -24,15 +24,16 @@ namespace EV_Station.Application.IdentityCards.QueryHandlers
             var isFront = await _geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrFrontText);
             if (isFront != "FRONT")
             {
-                return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt trước không đúng định dạng. Vui lòng gửi ảnh mặt trước của Căn cước công dân hoặc Giấy phép lái xe.");
+                return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt trước không đúng định dạng. Vui lòng gửi ảnh mặt trước của Căn cước công dân.");
             }
 
             var rawOcrBackText = await _tesseractOcrService.ExtractTextFromImageUrlAsync(request.dto.BackImageUrl);
             await Task.Delay(2000, cancellationToken);
             var isBack = await _geminiAi.DetermineFrontOrBackOfCardAsync(rawOcrBackText);
+            Console.WriteLine("isBack: " + isBack);
             if (isBack != "BACK")
             {
-                return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt sau không đúng định dạng. Vui lòng gửi ảnh mặt sau của Căn cước công dân hoặc Giấy phép lái xe.");
+                return GenericApiResponse<IdentityCardScanResponse>.FailResponse("Ảnh mặt sau không đúng định dạng. Vui lòng gửi ảnh mặt sau của Căn cước công dân.");
             }
 
             var rawOcrText = rawOcrFrontText + "\n" + rawOcrBackText;

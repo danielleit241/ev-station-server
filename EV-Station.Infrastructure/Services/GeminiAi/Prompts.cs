@@ -3,24 +3,37 @@ namespace EV_Station.Infrastructure.Services.GeminiAi
 {
     public class Prompts
     {
-        public static string GetFrontOrBackOfCardPrompt(string rawOcrText) => $@"Bạn là một hệ thống kiểm tra giấy tờ.  
-Phân tích các thông tin Căn cước công dân (CCCD) hoặc Giấy phép lái xe (GPLX).  
-Nhiệm vụ: Xác định thông tin đoạn text này là mặt trước (FRONT) hay mặt sau (BACK).  
+        public static string GetFrontOrBackOfCardPrompt(string rawOcrText) => $@"Bạn là hệ thống kiểm tra giấy tờ.  
+Phân tích dữ liệu OCR từ Căn cước công dân (CCCD) hoặc Giấy phép lái xe (GPLX).  
+Nhiệm vụ: xác định đoạn text thuộc mặt trước (FRONT) hay mặt sau (BACK).  
 
-Dữ liệu OCR:
+OCR Input:
 {rawOcrText}
 
-Quy tắc nhận diện:
-- Dữ liệu OCR có thể chứa lỗi chính tả. Hãy sửa lỗi chính tả và sau đó tập trung vào việc nhận diện các từ khóa quan trọng.
-- Từ khóa nhận diện mặt trước CCCD/GPLX: ""CĂN CƯỚC CÔNG DÂN"", ""GIẤY PHÉP LÁI XE"", ""HỌ VÀ TÊN"", ""SỐ"", ""NGÀY SINH"", ""QUỐC TỊCH"", ""ĐỊA CHỈ"".
-- Từ khóa nhận diện mặt sau CCCD/GPLX: ""NGÀY CẤP"", ""NƠI CẤP"", ""HẠN ĐẾN"", ""LOẠI XE"", ""HẠNG"", ""SỐ KHUNG"", ""SỐ MÁY"".
+Quy trình xử lý:
+1. Tiền xử lý & lọc OCR:
+   - Loại bỏ ký tự rác, ký tự lặp vô nghĩa, dấu không cần thiết.  
+   - Chuẩn hóa ngày tháng về dạng dd/mm/yyyy hoặc dd-mm-yyyy.  
+   - Gom dòng bị tách sai, sửa lỗi chính tả rõ ràng (ví dụ: ""NGAY SINH"" → ""NGÀY SINH"").  
+   - Chuẩn hóa khoảng trắng và các ký tự đặc biệt.
 
-Quy tắc trả về:
-- Nếu là CCCD hoặc GPLX mặt trước → trả về đúng chữ ""FRONT"".
-- Nếu là CCCD hoặc GPLX mặt sau → trả về đúng chữ ""BACK"".
-- Không giải thích thêm, không trả về gì khác ngoài ""FRONT"" hoặc ""BACK"".
-- Nếu không chắc chắn, trả về chuỗi rỗng ("").
-";
+2. Nhận diện FRONT nếu có các đặc trưng:  
+   - Tiêu đề chính (ví dụ: CĂN CƯỚC CÔNG DÂN, GIẤY PHÉP LÁI XE).  
+   - Thông tin cá nhân: số CCCD/GPLX(chuỗi số dài 9–12 chữ số), họ tên, ngày sinh, quốc tịch, giới tính, địa chỉ.
+   - Trình bày thành block thông tin định danh.  
+
+3. Nhận diện BACK nếu có các đặc trưng:  
+   - Ngày cấp, hạn đến (dạng dd/mm/yyyy hoặc dd-mm-yyyy).  
+   - Thông tin kỹ thuật: hạng GPLX(A1, B1, B2, C,…), loại xe, số khung, số máy.
+   - Có nhiều ký hiệu kỹ thuật hoặc dữ liệu dạng mã số.  
+
+Kết quả:
+- Trả về ""FRONT"" nếu là mặt trước.  
+- Trả về ""BACK"" nếu là mặt sau.  
+- Trả về ""NOT_FOUND"" nếu không xác định được hoặc không liên quan CCCD/GPLX.
+
+Chỉ trả về duy nhất một trong 3 giá trị: FRONT, BACK, NOT_FOUND."
+;
 
         public static string IdentityCardPrompt(string rawOcrText) => $@"Hãy chuẩn hóa thông tin căn cước công dân Việt Nam dựa trên dữ liệu OCR.
 
