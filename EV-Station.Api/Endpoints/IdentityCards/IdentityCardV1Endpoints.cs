@@ -11,7 +11,7 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                .WithName("CreateIdentityCard")
                .RequireAuthorization();
 
-            v1.MapGet("/{cardNumber}", GetIdentityCardById)
+            v1.MapGet("/{id: Guid}", GetIdentityCardById)
                 .WithName("GetIdentityCardById")
                 .RequireAuthorization();
 
@@ -26,9 +26,9 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .DisableAntiforgery();
         }
 
-        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardById(string cardNumber, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardById(Guid id, IMediator mediator)
         {
-            var getMyIdentityCardQuery = new GetIdentityCardById(cardNumber);
+            var getMyIdentityCardQuery = new GetIdentityCardById(id);
             var result = await mediator.Send(getMyIdentityCardQuery);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
