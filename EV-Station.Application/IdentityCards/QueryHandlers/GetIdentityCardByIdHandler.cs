@@ -19,7 +19,8 @@ namespace EV_Station.Application.IdentityCards.QueryHandlers
 
         public async Task<GenericApiResponse<IdentityCardResponse>> Handle(GetIdentityCardById request, CancellationToken cancellationToken)
         {
-            var identityCard = await _uow.IdentityCards.GetIdentityCardByNumber(request.cardNumber);
+            var identityCards = await _uow.IdentityCards.GetAllAsync();
+            var identityCard = identityCards.FirstOrDefault(ic => ic.UserId == request.id);
             if (identityCard is null)
             {
                 return GenericApiResponse<IdentityCardResponse>.FailResponse("Identity card not found");

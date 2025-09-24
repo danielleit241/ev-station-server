@@ -12,7 +12,7 @@
 
             v1.MapGet("/{id:guid}", GetUserByIdAsync)
                 .WithName("GetUserById")
-                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
             v1.MapPost("", CreateUserAsync)
                 .WithName("CreateUser")
