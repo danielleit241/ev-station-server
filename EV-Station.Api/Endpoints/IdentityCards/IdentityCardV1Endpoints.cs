@@ -1,6 +1,7 @@
 ﻿
 
 
+
 namespace EV_Station.Api.Endpoints.IdentityCards
 {
     public class IdentityCardV1Endpoints : IEndpointDefinition
@@ -35,6 +36,17 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .WithName("DeleteIdentityCard")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
+            v1.MapPut("/{id:Guid}", UpdateIdentityCard)
+                .WithName("UpdateIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> UpdateIdentityCard(Guid id, [FromBody] IdentityCardRequest request, IMediator mediator)
+        {
+            var updateIdentityCardCommand = new UpdateIdentityCard(id, request);
+            var result = await mediator.Send(updateIdentityCardCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> DeleteIdentityCard(Guid id, IMediator mediator)

@@ -7,11 +7,11 @@ using MediatR;
 
 namespace EV_Station.Application.IdentityCards.CommandHandlers
 {
-    public class DeleteIdentityCardHandle : IRequestHandler<DeleteIdentityCard, GenericApiResponse<IdentityCardResponse>>
+    public class DeleteIdentityCardHandler : IRequestHandler<DeleteIdentityCard, GenericApiResponse<IdentityCardResponse>>
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public DeleteIdentityCardHandle(IUnitOfWork uow, IMapper mapper)
+        public DeleteIdentityCardHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;
@@ -23,13 +23,13 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
             var identityCard = await identityCardRepository.GetByIdAsync(request.id);
             if (identityCard is null)
             {
-                return GenericApiResponse<IdentityCardResponse>.FailResponse("Identitycard card not found!");
+                return GenericApiResponse<IdentityCardResponse>.FailResponse("Không tìm thấy thẻ căn cước công dân");
             }
             identityCardRepository.Delete(identityCard);
             await _uow.SaveChangesAsync(cancellationToken);
 
             var identityCardResponse = _mapper.Map<IdentityCardResponse>(identityCard);
-            return GenericApiResponse<IdentityCardResponse>.SuccessResponse(identityCardResponse, "Delete identity card successfully");
+            return GenericApiResponse<IdentityCardResponse>.SuccessResponse(identityCardResponse, "Xoá thẻ căn cước công dân thành công");
         }
     }
 }

@@ -28,14 +28,14 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
 
             if (userHasIdentityCard)
             {
-                return GenericApiResponse<IdentityCardResponse>.FailResponse("User already has an identity card.");
+                return GenericApiResponse<IdentityCardResponse>.FailResponse("Người dùng đã có thẻ căn cước.");
             }
 
             var existingIdentityCard = identityCards.Any(ic => ic.CardNumber == request.dto.CardNumber);
 
             if (!existingIdentityCard)
             {
-                return GenericApiResponse<IdentityCardResponse>.FailResponse("Identity card with the same card number already exists.");
+                return GenericApiResponse<IdentityCardResponse>.FailResponse("Số thẻ căn cước đã tồn tại");
             }
 
             var newIdentityCard = _mapper.Map<IdentityCard>(request.dto);

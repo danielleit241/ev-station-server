@@ -11,8 +11,8 @@
         public string PlaceOfResidence { get; set; } = string.Empty;
         public DateOnly CreateDate { get; set; }
         public DateOnly DayOfExpiry { get; set; }
-        public string? FrontImageUrl { get; set; }
-        public string? BackImageUrl { get; set; }
+        public string FrontImageUrl { get; set; } = string.Empty;
+        public string BackImageUrl { get; set; } = string.Empty;
 
     }
 }
