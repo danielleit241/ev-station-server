@@ -9,6 +9,11 @@ namespace EV_Station.Infrastructure.Repositories
     {
         public DriverLicenseRepository(EVStationDbContext context) : base(context)
         {
+
+        }
+        public async Task<DriverLicense?> GetDriverLicenseByLinceseNumber(string number)
+        {
+            return await _dbSet.FindAsync(number);
         }
     }
 }

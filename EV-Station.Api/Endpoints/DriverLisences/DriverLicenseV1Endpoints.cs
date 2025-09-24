@@ -6,7 +6,7 @@ using EV_Station.Application.DriverLisences.Queries;
 
 namespace EV_Station.Api.Endpoints.DriverLisences
 {
-    public class DriverLisenceV1Endpoints : IEndpointDefinition
+    public class DriverLicenseV1Endpoints : IEndpointDefinition
     {
         public void RegisterEndpoints(WebApplication application)
         {
@@ -23,6 +23,39 @@ namespace EV_Station.Api.Endpoints.DriverLisences
                 .WithName("Scan File")
                 .Accepts<IFormFile>("multipart/form-data")
                 .DisableAntiforgery();
+
+            v1.MapGet("", GetAllDriverLicense)
+                .WithName("Get All Driver License")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+
+            v1.MapGet("/{id:Guid}", GetListDriverLicenseByUserId)
+                .WithName("Get List Driver License By User Id")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+            v1.MapGet("/{licenseNumber}", GetDriverLicenseByLicenseNumber)
+                .WithName("Get Driver License By Id")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<ICollection<DriverLicenseResponse>>>, NotFound>> GetListDriverLicenseByUserId(Guid id, IMediator mediator)
+        {
+            var getListDriverLicenseByUserIdQuery = new GetListDriverLicenseByUserId(id);
+            var result = await mediator.Send(getListDriverLicenseByUserIdQuery);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<DriverLicenseResponse>>, NotFound>> GetDriverLicenseByLicenseNumber(string licenseNumber, IMediator mediator)
+        {
+            var getDriverLicenseByLicenseNumberQuery = new GetDriverLicenseByLicenseNumber(licenseNumber);
+            var result = await mediator.Send(getDriverLicenseByLicenseNumberQuery);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<ICollection<DriverLicenseResponse>>>, NotFound>> GetAllDriverLicense(IMediator mediator)
+        {
+            var getAllDriverLicenseQuery = new GetAllDriverLicense();
+            var result = await mediator.Send(getAllDriverLicenseQuery);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<DriverLicenseResponse>>, NotFound>> CreateDriverLicense(ICurrentUserService currentUser, DriverLicenseRequest request, IMediator mediator)

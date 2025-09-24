@@ -14,6 +14,6 @@ namespace EV_Station.Application.IdentityCards.DTOs.Responses
         public string? FrontImageUrl { get; set; }
         public string? BackImageUrl { get; set; }
         public VerificationStatus Status { get; set; }
-        public string UserId { get; set; } = default!;
+        public Guid UserId { get; set; } = default!;
     }
 }
