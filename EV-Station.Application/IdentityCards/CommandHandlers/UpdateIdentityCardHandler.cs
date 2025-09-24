@@ -37,6 +37,7 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
             identityCard.DayOfExpiry = request.dto.DayOfExpiry;
             identityCard.FrontImagePath = request.dto.FrontImageUrl;
             identityCard.BackImagePath = request.dto.BackImageUrl;
+            identityCard.UserId = request.id;
 
             identityCardRepository.Update(identityCard);
             await _uow.SaveChangesAsync(cancellationToken);

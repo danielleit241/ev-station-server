@@ -35,6 +35,17 @@ namespace EV_Station.Api.Endpoints.DriverLisences
             v1.MapGet("/{licenseNumber}", GetDriverLicenseByLicenseNumber)
                 .WithName("Get Driver License By Id")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+            v1.MapPut("/{id:Guid}", UpdateDriverLicense)
+                .WithName("Update Driver License")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<DriverLicenseResponse>>, NotFound>> UpdateDriverLicense(Guid id, [FromBody] DriverLicenseRequest request, IMediator mediator)
+        {
+            var updateDriverLicenseCommand = new UpdateDriverLicense(id, request);
+            var result = await mediator.Send(updateDriverLicenseCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<ICollection<DriverLicenseResponse>>>, NotFound>> GetListDriverLicenseByUserId(Guid id, IMediator mediator)
