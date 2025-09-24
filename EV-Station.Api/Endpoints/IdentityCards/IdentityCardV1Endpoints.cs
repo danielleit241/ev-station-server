@@ -2,6 +2,7 @@
 
 
 
+
 namespace EV_Station.Api.Endpoints.IdentityCards
 {
     public class IdentityCardV1Endpoints : IEndpointDefinition
@@ -40,6 +41,17 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .WithName("UpdateIdentityCard")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
+            v1.MapPut("/verify/{cardNumber}", VerifyIdentityCard)
+                .WithName("ConfirmIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> VerifyIdentityCard(string cardNumber, [FromBody] string status, IMediator mediator)
+        {
+            var verifyIdentityCardCommand = new VerifyIdentityCard(cardNumber, status);
+            var result = await mediator.Send(verifyIdentityCardCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> UpdateIdentityCard(Guid id, [FromBody] IdentityCardRequest request, IMediator mediator)
