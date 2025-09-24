@@ -5,9 +5,9 @@ using EV_Station.Infrastructure.Repositories.BaseRepositories;
 
 namespace EV_Station.Infrastructure.Repositories
 {
-    public class DriverLicenseReposioty : GenericRepository<DriverLicense>, IDriverLicenseReposioty
+    public class DriverLicenseRepository : GenericRepository<DriverLicense>, IDriverLicenseRepository
     {
-        public DriverLicenseReposioty(EVStationDbContext context) : base(context)
+        public DriverLicenseRepository(EVStationDbContext context) : base(context)
         {
         }
     }

@@ -1,4 +1,6 @@
 ﻿
+
+
 namespace EV_Station.Api.Endpoints.IdentityCards
 {
     public class IdentityCardV1Endpoints : IEndpointDefinition
@@ -11,7 +13,7 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                .WithName("CreateIdentityCard")
                .RequireAuthorization();
 
-            v1.MapGet("/{id: Guid}", GetIdentityCardById)
+            v1.MapGet("/{id:Guid}", GetIdentityCardById)
                 .WithName("GetIdentityCardById")
                 .RequireAuthorization();
 
@@ -24,6 +26,30 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .WithName("ScanIdentityCardFile")
                 .RequireAuthorization()
                 .DisableAntiforgery();
+
+            v1.MapGet("", GetAllIdentityCard)
+                .WithName("GetAllIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+
+            v1.MapDelete("/{id:Guid}", DeleteIdentityCard)
+                .WithName("DeleteIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> DeleteIdentityCard(Guid id, IMediator mediator)
+        {
+            var deleteIdentityCardCommand = new DeleteIdentityCard(id);
+            var result = await mediator.Send(deleteIdentityCardCommand);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<ICollection<IdentityCardResponse>>>, NotFound>> GetAllIdentityCard(IMediator mediator)
+        {
+            var getAllIdentityCardQuery = new GetAllIdentityCards();
+            var result = await mediator.Send(getAllIdentityCardQuery);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+
         }
 
         private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardById(Guid id, IMediator mediator)
