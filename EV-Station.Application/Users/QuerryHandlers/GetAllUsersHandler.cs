@@ -21,7 +21,7 @@ namespace EV_Station.Application.Users.QuerryHandlers
 
         public async Task<GenericApiResponse<ICollection<UserResponseDto>>> Handle(GetAllUsers request, CancellationToken cancellationToken)
         {
-            var users = await _uow.Users.GetAllAsync();
+            var users = await _uow.Users.GetAllAsync(u => u.Role);
             if (users is null || !users.Any())
             {
                 return GenericApiResponse<ICollection<UserResponseDto>>.FailResponse("No users found");
