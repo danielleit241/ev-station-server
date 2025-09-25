@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace EV_Station.Api.Extensions
+﻿namespace EV_Station.Api.Extensions
 {
     public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
     {

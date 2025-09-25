@@ -11,6 +11,10 @@ global using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepos
 global using EV_Station.Application.Common.Abstractions.IServices;
 global using EV_Station.Application.Common.Mappings;
 global using EV_Station.Application.Common.Responses;
+global using EV_Station.Application.DriverLisences.Commands;
+global using EV_Station.Application.DriverLisences.DTOs.Requests;
+global using EV_Station.Application.DriverLisences.DTOs.Responses;
+global using EV_Station.Application.DriverLisences.Queries;
 global using EV_Station.Application.IdentityCards.Commands;
 global using EV_Station.Application.IdentityCards.DTOs.Requests;
 global using EV_Station.Application.IdentityCards.DTOs.Responses;
@@ -34,13 +38,10 @@ global using Microsoft.AspNetCore.Http.Features;
 global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.Tokens;
 global using Microsoft.OpenApi.Models;
+global using Swashbuckle.AspNetCore.SwaggerGen;
 global using System.Net;
 global using System.Reflection;
 global using System.Text.Json;
-
-
-
-
-

@@ -1,10 +1,4 @@
-﻿
-using EV_Station.Application.DriverLisences.Commands;
-using EV_Station.Application.DriverLisences.DTOs.Requests;
-using EV_Station.Application.DriverLisences.DTOs.Responses;
-using EV_Station.Application.DriverLisences.Queries;
-
-namespace EV_Station.Api.Endpoints.DriverLisences
+﻿namespace EV_Station.Api.Endpoints.DriverLisences
 {
     public class DriverLicenseV1Endpoints : IEndpointDefinition
     {

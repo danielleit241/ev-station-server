@@ -1,9 +1,4 @@
-﻿
-
-
-
-
-namespace EV_Station.Api.Endpoints.IdentityCards
+﻿namespace EV_Station.Api.Endpoints.IdentityCards
 {
     public class IdentityCardV1Endpoints : IEndpointDefinition
     {

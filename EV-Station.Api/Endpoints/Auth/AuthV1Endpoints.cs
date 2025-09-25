@@ -1,5 +1,4 @@
-﻿
-namespace EV_Station.Api.Endpoints.Auth
+﻿namespace EV_Station.Api.Endpoints.Auth
 {
     public class AuthV1Endpoints : IEndpointDefinition
     {
