@@ -7,17 +7,17 @@ using MediatR;
 
 namespace EV_Station.Application.IdentityCards.QueryHandlers
 {
-    public class GetIdentityCardByIdHandler : IRequestHandler<GetIdentityCardById, GenericApiResponse<IdentityCardResponse>>
+    public class GetIdentityCardByUserIdHandler : IRequestHandler<GetIdentityCardByUserId, GenericApiResponse<IdentityCardResponse>>
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public GetIdentityCardByIdHandler(IUnitOfWork uow, IMapper mapper)
+        public GetIdentityCardByUserIdHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;
         }
 
-        public async Task<GenericApiResponse<IdentityCardResponse>> Handle(GetIdentityCardById request, CancellationToken cancellationToken)
+        public async Task<GenericApiResponse<IdentityCardResponse>> Handle(GetIdentityCardByUserId request, CancellationToken cancellationToken)
         {
             var identityCards = await _uow.IdentityCards.GetAllAsync();
             var identityCard = identityCards.FirstOrDefault(ic => ic.UserId == request.id);

@@ -4,5 +4,5 @@ using MediatR;
 
 namespace EV_Station.Application.DriverLisences.Queries
 {
-    public record GetAllDriverLicense : IRequest<GenericApiResponse<ICollection<DriverLicenseResponse>>>;
+    public record GetAllDriverLicenses : IRequest<GenericApiResponse<ICollection<DriverLicenseResponse>>>;
 }

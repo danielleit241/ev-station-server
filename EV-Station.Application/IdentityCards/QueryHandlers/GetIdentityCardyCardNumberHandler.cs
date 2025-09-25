@@ -5,9 +5,9 @@ using MediatR;
 
 namespace EV_Station.Application.IdentityCards.QueryHandlers
 {
-    public class GetIdentityCardsHandler : IRequestHandler<GetIdentityCards, GenericApiResponse<ICollection<IdentityCardResponse>>>
+    public class GetIdentityCardyCardNumberHandler : IRequestHandler<GetIdentityCardByCardNumber, GenericApiResponse<ICollection<IdentityCardResponse>>>
     {
-        public Task<GenericApiResponse<ICollection<IdentityCardResponse>>> Handle(GetIdentityCards request, CancellationToken cancellationToken)
+        public Task<GenericApiResponse<ICollection<IdentityCardResponse>>> Handle(GetIdentityCardByCardNumber request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

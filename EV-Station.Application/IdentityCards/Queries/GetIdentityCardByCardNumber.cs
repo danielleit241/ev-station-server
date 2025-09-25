@@ -4,5 +4,5 @@ using MediatR;
 
 namespace EV_Station.Application.IdentityCards.Queries
 {
-    public record GetIdentityCards : IRequest<GenericApiResponse<ICollection<IdentityCardResponse>>>;
+    public record GetIdentityCardByCardNumber(string cardNumber) : IRequest<GenericApiResponse<IdentityCardResponse>>;
 }

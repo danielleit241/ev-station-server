@@ -11,12 +11,28 @@ namespace EV_Station.Api.Endpoints.IdentityCards
         {
             var v1 = application.MapGroup("api/v{version:apiVersion}/identity-cards").WithApiVersionSet().HasApiVersion(1, 0);
 
+            v1.MapGet("", GetAllIdentityCard)
+                .WithName("GetAllIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+
+            v1.MapGet("/{cardNumber}", GetIdentityCardByCardNumber)
+                .WithName("GetIdentityCardByCardNumber")
+                .RequireAuthorization();
+
             v1.MapPost("", CreateIdentityCard)
                .WithName("CreateIdentityCard")
                .RequireAuthorization();
 
-            v1.MapGet("/{id:Guid}", GetIdentityCardById)
-                .WithName("GetIdentityCardById")
+            v1.MapDelete("/{id:Guid}", DeleteIdentityCard)
+                .WithName("DeleteIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+            v1.MapPut("/{id:Guid}", UpdateIdentityCard)
+                .WithName("UpdateIdentityCard")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+            v1.MapGet("users/{id:Guid}", GetIdentityCardByUserId)
+                .WithName("GetIdentityCardByUserId")
                 .RequireAuthorization();
 
             v1.MapPost("/scan-url", ScanIdentityCardUrl)
@@ -29,22 +45,16 @@ namespace EV_Station.Api.Endpoints.IdentityCards
                 .RequireAuthorization()
                 .DisableAntiforgery();
 
-            v1.MapGet("", GetAllIdentityCard)
-                .WithName("GetAllIdentityCard")
-                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
-
-            v1.MapDelete("/{id:Guid}", DeleteIdentityCard)
-                .WithName("DeleteIdentityCard")
-                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
-
-            v1.MapPut("/{id:Guid}", UpdateIdentityCard)
-                .WithName("UpdateIdentityCard")
-                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
-
-            v1.MapPut("/verify/{cardNumber}", VerifyIdentityCard)
+            v1.MapPut("{cardNumber}/verify", VerifyIdentityCard)
                 .WithName("ConfirmIdentityCard")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
+        }
 
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardByCardNumber(string cardNumber, IMediator mediator)
+        {
+            var getIdentityCardByCardNumberQuery = new GetIdentityCardByCardNumber(cardNumber);
+            var result = await mediator.Send(getIdentityCardByCardNumberQuery);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> VerifyIdentityCard(string cardNumber, [FromBody] string status, IMediator mediator)
@@ -76,9 +86,9 @@ namespace EV_Station.Api.Endpoints.IdentityCards
 
         }
 
-        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardById(Guid id, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardByUserId(Guid id, IMediator mediator)
         {
-            var getMyIdentityCardQuery = new GetIdentityCardById(id);
+            var getMyIdentityCardQuery = new GetIdentityCardByUserId(id);
             var result = await mediator.Send(getMyIdentityCardQuery);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }

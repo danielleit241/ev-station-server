@@ -14,15 +14,7 @@ namespace EV_Station.Api.Endpoints.DriverLisences
 
             v1.MapPost("", CreateDriverLicense)
                 .WithName("Create Driver License")
-                .RequireAuthorization();
-
-            v1.MapPost("/scan-url", ScanUrlDriverLisence)
-                .WithName("Scan Url");
-
-            v1.MapPost("/scan-file", ScanFileDriverLisence)
-                .WithName("Scan File")
-                .Accepts<IFormFile>("multipart/form-data")
-                .DisableAntiforgery();
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Renter" });
 
             v1.MapGet("", GetAllDriverLicense)
                 .WithName("Get All Driver License")
@@ -33,7 +25,7 @@ namespace EV_Station.Api.Endpoints.DriverLisences
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
             v1.MapGet("/{licenseNumber}", GetDriverLicenseByLicenseNumber)
-                .WithName("Get Driver License By Id")
+                .WithName("Get Driver License By Number")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
             v1.MapPut("/{id:Guid}", UpdateDriverLicense)
@@ -43,6 +35,16 @@ namespace EV_Station.Api.Endpoints.DriverLisences
             v1.MapDelete("/{id:Guid}", DeleteDriverLicense)
                 .WithName("Delete Driver License")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
+
+            v1.MapPost("/scan-url", ScanUrlDriverLisence)
+                .WithName("Scan Url")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Renter" });
+
+            v1.MapPost("/scan-file", ScanFileDriverLisence)
+                .WithName("Scan File")
+                .Accepts<IFormFile>("multipart/form-data")
+                .DisableAntiforgery()
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Renter" });
         }
 
         private async Task<Results<Ok<GenericApiResponse<DriverLicenseResponse>>, NotFound>> DeleteDriverLicense(Guid id, [FromBody] string licenseNumber, IMediator mediator)
@@ -75,7 +77,7 @@ namespace EV_Station.Api.Endpoints.DriverLisences
 
         private async Task<Results<Ok<GenericApiResponse<ICollection<DriverLicenseResponse>>>, NotFound>> GetAllDriverLicense(IMediator mediator)
         {
-            var getAllDriverLicenseQuery = new GetAllDriverLicense();
+            var getAllDriverLicenseQuery = new GetAllDriverLicenses();
             var result = await mediator.Send(getAllDriverLicenseQuery);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }

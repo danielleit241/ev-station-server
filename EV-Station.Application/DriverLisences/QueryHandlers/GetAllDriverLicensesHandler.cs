@@ -7,17 +7,17 @@ using MediatR;
 
 namespace EV_Station.Application.DriverLisences.QueryHandlers
 {
-    public class GetAllDriverLicenseHandler : IRequestHandler<GetAllDriverLicense, GenericApiResponse<ICollection<DriverLicenseResponse>>>
+    public class GetAllDriverLicensesHandler : IRequestHandler<GetAllDriverLicenses, GenericApiResponse<ICollection<DriverLicenseResponse>>>
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public GetAllDriverLicenseHandler(IUnitOfWork uow, IMapper mapper)
+        public GetAllDriverLicensesHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;
         }
 
-        public async Task<GenericApiResponse<ICollection<DriverLicenseResponse>>> Handle(GetAllDriverLicense request, CancellationToken cancellationToken)
+        public async Task<GenericApiResponse<ICollection<DriverLicenseResponse>>> Handle(GetAllDriverLicenses request, CancellationToken cancellationToken)
         {
             var driverLicenses = await _uow.DriverLicenses.GetAllAsync();
             if (driverLicenses is null || !driverLicenses.Any())
