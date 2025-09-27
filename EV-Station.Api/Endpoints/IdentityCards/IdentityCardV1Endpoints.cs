@@ -10,9 +10,9 @@
                 .WithName("GetAllIdentityCard")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
 
-            v1.MapGet("/{cardNumber}", GetIdentityCardByCardNumber)
-                .WithName("GetIdentityCardByCardNumber")
-                .RequireAuthorization();
+            //v1.MapGet("/{cardNumber}", GetIdentityCardByCardNumber)
+            //    .WithName("GetIdentityCardByCardNumber")
+            //    .RequireAuthorization();
 
             v1.MapPost("", CreateIdentityCard)
                .WithName("CreateIdentityCard")
@@ -45,12 +45,12 @@
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
         }
 
-        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardByCardNumber(string cardNumber, IMediator mediator)
-        {
-            var getIdentityCardByCardNumberQuery = new GetIdentityCardByCardNumber(cardNumber);
-            var result = await mediator.Send(getIdentityCardByCardNumberQuery);
-            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
-        }
+        //private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardByCardNumber(string cardNumber, IMediator mediator)
+        //{
+        //    var getIdentityCardByCardNumberQuery = new GetIdentityCardByCardNumber(cardNumber);
+        //    var result = await mediator.Send(getIdentityCardByCardNumberQuery);
+        //    return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        //}
 
         private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> VerifyIdentityCard(string cardNumber, [FromBody] string status, IMediator mediator)
         {
