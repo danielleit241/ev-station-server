@@ -33,7 +33,7 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
 
             var existingIdentityCard = identityCards.Any(ic => ic.CardNumber == request.dto.CardNumber);
 
-            if (!existingIdentityCard)
+            if (existingIdentityCard)
             {
                 return GenericApiResponse<IdentityCardResponse>.FailResponse("Số thẻ căn cước đã tồn tại");
             }
