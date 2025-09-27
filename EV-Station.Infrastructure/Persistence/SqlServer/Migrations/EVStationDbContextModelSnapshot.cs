@@ -48,7 +48,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("RentalID");
 
-                    b.ToTable("AdditionalCharges");
+                    b.ToTable("AdditionalCharges", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.DriverLicense", b =>
@@ -105,7 +105,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DriverLicenses");
+                    b.ToTable("DriverLicenses", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.IdentityCard", b =>
@@ -163,7 +163,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("IdentityCards");
+                    b.ToTable("IdentityCards", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.Payment", b =>
@@ -191,7 +191,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("RentalID");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.Policy", b =>
@@ -219,7 +219,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasKey("PolicyId");
 
-                    b.ToTable("Policies");
+                    b.ToTable("Policies", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.Provider", b =>
@@ -236,7 +236,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Providers");
+                    b.ToTable("Providers", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.Rental", b =>
@@ -292,7 +292,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("VehicleID");
 
-                    b.ToTable("Rentals");
+                    b.ToTable("Rentals", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.RentalImage", b =>
@@ -318,7 +318,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("RentalID");
 
-                    b.ToTable("RentalImages");
+                    b.ToTable("RentalImages", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.RentalLocation", b =>
@@ -355,7 +355,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasKey("LocationID");
 
-                    b.ToTable("RentalLocations");
+                    b.ToTable("RentalLocations", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.Role", b =>
@@ -372,7 +372,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.User", b =>
@@ -418,7 +418,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.Vehicle", b =>
@@ -471,7 +471,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("TypeID");
 
-                    b.ToTable("Vehicles");
+                    b.ToTable("Vehicles", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.VehicleHistory", b =>
@@ -501,7 +501,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("VehicleID");
 
-                    b.ToTable("VehicleHistories");
+                    b.ToTable("VehicleHistories", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.VehicleImage", b =>
@@ -524,7 +524,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasIndex("VehicleID");
 
-                    b.ToTable("VehicleImages");
+                    b.ToTable("VehicleImages", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.VehicleType", b =>
@@ -552,7 +552,7 @@ namespace EV_Station.Infrastructure.Migrations
 
                     b.HasKey("TypeID");
 
-                    b.ToTable("VehicleTypes");
+                    b.ToTable("VehicleTypes", (string)null);
                 });
 
             modelBuilder.Entity("EV_Station.Domain.Models.AdditionalCharge", b =>
