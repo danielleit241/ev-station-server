@@ -39,6 +39,8 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
             }
 
             var newIdentityCard = _mapper.Map<IdentityCard>(request.dto);
+
+            newIdentityCard.CreatedAt = DateTime.UtcNow;
             newIdentityCard.UserId = request.userId;
 
             identityCardRepository.Add(newIdentityCard);

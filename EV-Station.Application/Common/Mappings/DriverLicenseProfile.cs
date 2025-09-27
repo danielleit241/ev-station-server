@@ -10,7 +10,8 @@ namespace EV_Station.Application.Common.Mappings
         public DriverLicenseProfile()
         {
             // CreateMap<Source, Destination>();
-            CreateMap<DriverLicenseRequest, DriverLicense>();
+            CreateMap<DriverLicenseRequest, DriverLicense>()
+                .ForMember(d => d.CreatedAt, opt => opt.Ignore());
 
             CreateMap<DriverLicense, DriverLicenseResponse>();
         }

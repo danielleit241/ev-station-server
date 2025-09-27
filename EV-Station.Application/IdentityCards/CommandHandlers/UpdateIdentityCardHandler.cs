@@ -35,8 +35,8 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
             identityCard.PlaceOfResidence = request.dto.PlaceOfResidence;
             identityCard.CreateDate = request.dto.CreateDate;
             identityCard.DayOfExpiry = request.dto.DayOfExpiry;
-            identityCard.FrontImagePath = request.dto.FrontImageUrl;
-            identityCard.BackImagePath = request.dto.BackImageUrl;
+            identityCard.FrontImagePath = request.dto.FrontImagePath;
+            identityCard.BackImagePath = request.dto.BackImagePath;
             identityCard.UserId = request.id;
 
             identityCardRepository.Update(identityCard);

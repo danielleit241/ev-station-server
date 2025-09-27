@@ -11,9 +11,10 @@ namespace EV_Station.Application.IdentityCards.DTOs.Responses
         public DateOnly? DayOfExpiry { get; set; }
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string PlaceOfResidence { get; set; } = string.Empty;
-        public string? FrontImageUrl { get; set; }
-        public string? BackImageUrl { get; set; }
+        public string? FrontImagePath { get; set; }
+        public string? BackImagePath { get; set; }
         public VerificationStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Guid UserId { get; set; } = default!;
     }
 }

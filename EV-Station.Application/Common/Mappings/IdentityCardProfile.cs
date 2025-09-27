@@ -9,7 +9,8 @@ namespace EV_Station.Application.Common.Mappings
     {
         public IdentityCardProfile()
         {
-            CreateMap<IdentityCardRequest, IdentityCard>();
+            CreateMap<IdentityCardRequest, IdentityCard>()
+                .ForMember(d => d.CreatedAt, opt => opt.Ignore());
 
             CreateMap<IdentityCard, IdentityCardResponse>();
         }

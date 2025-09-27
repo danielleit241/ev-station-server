@@ -16,6 +16,7 @@ namespace EV_Station.Application.DriverLisences.DTOs.Responses
         public string FrontImagePath { get; set; } = string.Empty;
         public string BackImagePath { get; set; } = string.Empty;
         public VerificationStatus VerificationStatus { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Guid UserId { get; set; } = default!;
     }
 }

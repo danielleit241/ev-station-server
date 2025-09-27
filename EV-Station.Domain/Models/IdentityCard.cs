@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using EV_Station.Domain.Models.Enums;
+﻿using EV_Station.Domain.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace EV_Station.Domain.Models
 {
@@ -17,9 +17,9 @@ namespace EV_Station.Domain.Models
         public DateOnly DayOfExpiry { get; set; }
         public string FrontImagePath { get; set; } = string.Empty;
         public string BackImagePath { get; set; } = string.Empty;
+
         public VerificationStatus Status { get; set; } = VerificationStatus.Pending;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;
     }
