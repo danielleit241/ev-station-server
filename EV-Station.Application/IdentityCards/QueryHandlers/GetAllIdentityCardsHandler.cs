@@ -24,6 +24,7 @@ namespace EV_Station.Application.IdentityCards.QueryHandlers
                 return GenericApiResponse<ICollection<IdentityCardResponse>>.FailResponse("No identity cards found");
             }
             var identityCardsResponse = _mapper.Map<ICollection<IdentityCardResponse>>(identityCards);
+
             return GenericApiResponse<ICollection<IdentityCardResponse>>.SuccessResponse(identityCardsResponse);
         }
     }

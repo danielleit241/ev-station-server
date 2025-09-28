@@ -24,7 +24,6 @@ namespace EV_Station.Application.DriverLisences.CommandHandlers
             var licenses = await repo.GetAllAsync(u => u.User);
             var driverLicense = _mapper.Map<DriverLicense>(request.dto);
 
-
             var hasDriverLicense = licenses.Any(x => x.UserId == request.userId && x.LicenseClass == driverLicense.LicenseClass);
             if (hasDriverLicense)
             {

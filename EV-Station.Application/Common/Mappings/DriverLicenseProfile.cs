@@ -9,11 +9,16 @@ namespace EV_Station.Application.Common.Mappings
     {
         public DriverLicenseProfile()
         {
-            // CreateMap<Source, Destination>();
             CreateMap<DriverLicenseRequest, DriverLicense>()
+                .ForMember(d => d.DateOfBirth, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.DateOfBirth.ToDateTime(TimeOnly.MinValue))))
+                .ForMember(d => d.BeginingDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.BeginingDate.ToDateTime(TimeOnly.MinValue))))
+                .ForMember(d => d.ExpiresDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.ExpiresDate.ToDateTime(TimeOnly.MinValue))))
                 .ForMember(d => d.CreatedAt, opt => opt.Ignore());
 
-            CreateMap<DriverLicense, DriverLicenseResponse>();
+            CreateMap<DriverLicense, DriverLicenseResponse>()
+                .ForMember(d => d.DateOfBirth, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.DateOfBirth)))
+                .ForMember(d => d.BeginingDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.BeginingDate)))
+                .ForMember(d => d.ExpiresDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.ExpiresDate ?? DateTime.MinValue)));
         }
     }
 }

@@ -3,6 +3,7 @@ using EV_Station.Application.Common.Abstractions.IRepositories.IBaseRepositories
 using EV_Station.Application.Common.Responses;
 using EV_Station.Application.IdentityCards.Commands;
 using EV_Station.Application.IdentityCards.DTOs.Responses;
+using EV_Station.Domain.Models;
 using MediatR;
 
 namespace EV_Station.Application.IdentityCards.CommandHandlers
@@ -19,31 +20,40 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
         public async Task<GenericApiResponse<IdentityCardResponse>> Handle(UpdateIdentityCard request, CancellationToken cancellationToken)
         {
             var identityCardRepository = _uow.IdentityCards;
-
             var identityCard = await identityCardRepository.GetByIdAsync(request.id);
             if (identityCard == null)
             {
                 return GenericApiResponse<IdentityCardResponse>.FailResponse("Thẻ căn cước không tồn tại.");
             }
 
-            identityCard.CardNumber = request.dto.CardNumber;
-            identityCard.FullName = request.dto.FullName;
-            identityCard.Sex = request.dto.Sex;
-            identityCard.Nationality = request.dto.Nationality;
-            identityCard.DateOfBirth = request.dto.DateOfBirth;
-            identityCard.PlaceOfOrigin = request.dto.PlaceOfOrigin;
-            identityCard.PlaceOfResidence = request.dto.PlaceOfResidence;
-            identityCard.CreateDate = request.dto.CreateDate;
-            identityCard.DayOfExpiry = request.dto.DayOfExpiry;
-            identityCard.FrontImagePath = request.dto.FrontImagePath;
-            identityCard.BackImagePath = request.dto.BackImagePath;
-            identityCard.UserId = request.id;
+            if (identityCard.Status == Domain.Models.Enums.VerificationStatus.Verified)
+            {
+                return GenericApiResponse<IdentityCardResponse>.FailResponse("Không thể cập nhật thẻ căn cước đã được phê duyệt.");
+            }
 
-            identityCardRepository.Update(identityCard);
+            var updatedIdentityCard = GetUpdateIdentityCard(identityCard, _mapper.Map(request.dto, identityCard));
+            identityCardRepository.Update(updatedIdentityCard);
             await _uow.SaveChangesAsync(cancellationToken);
-
             var response = _mapper.Map<IdentityCardResponse>(identityCard);
             return GenericApiResponse<IdentityCardResponse>.SuccessResponse(response, "Cập nhật thẻ căn cước thành công.");
+        }
+
+        private IdentityCard GetUpdateIdentityCard(IdentityCard existingCard, IdentityCard updatedCard)
+        {
+            existingCard.CardNumber = updatedCard.CardNumber;
+            existingCard.FullName = updatedCard.FullName;
+            existingCard.Sex = updatedCard.Sex;
+            existingCard.Nationality = updatedCard.Nationality;
+            existingCard.DateOfBirth = updatedCard.DateOfBirth;
+            existingCard.CreateDate = updatedCard.CreateDate;
+            existingCard.DayOfExpiry = updatedCard.DayOfExpiry;
+            existingCard.PlaceOfOrigin = updatedCard.PlaceOfOrigin;
+            existingCard.PlaceOfResidence = updatedCard.PlaceOfResidence;
+            existingCard.FrontImagePath = updatedCard.FrontImagePath;
+            existingCard.BackImagePath = updatedCard.BackImagePath;
+            existingCard.Status = Domain.Models.Enums.VerificationStatus.Pending;
+
+            return existingCard;
         }
     }
 }
