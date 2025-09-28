@@ -10,15 +10,24 @@ namespace EV_Station.Application.Common.Mappings
         public DriverLicenseProfile()
         {
             CreateMap<DriverLicenseRequest, DriverLicense>()
-                .ForMember(d => d.DateOfBirth, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.DateOfBirth.ToDateTime(TimeOnly.MinValue))))
-                .ForMember(d => d.BeginingDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.BeginingDate.ToDateTime(TimeOnly.MinValue))))
-                .ForMember(d => d.ExpiresDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.ExpiresDate.ToDateTime(TimeOnly.MinValue))))
-                .ForMember(d => d.CreatedAt, opt => opt.Ignore());
+                .ForMember(d => d.DateOfBirth,
+                            opt => opt.MapFrom(s => s.DateOfBirth.ToDateTime(TimeOnly.MinValue)))
+                .ForMember(d => d.BeginingDate,
+                            opt => opt.MapFrom(s => s.BeginingDate.ToDateTime(TimeOnly.MinValue)))
+                .ForMember(d => d.ExpiresDate,
+                            opt => opt.MapFrom(s => s.ExpiresDate.ToDateTime(TimeOnly.MinValue)))
+                .ForMember(d => d.CreatedAt,
+                            opt => opt.Ignore());
 
             CreateMap<DriverLicense, DriverLicenseResponse>()
-                .ForMember(d => d.DateOfBirth, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.DateOfBirth)))
-                .ForMember(d => d.BeginingDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.BeginingDate)))
-                .ForMember(d => d.ExpiresDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.ExpiresDate ?? DateTime.MinValue)));
+                .ForMember(d => d.DateOfBirth,
+                           opt => opt.MapFrom(s => DateOnly.FromDateTime(s.DateOfBirth)))
+                .ForMember(d => d.BeginingDate,
+                           opt => opt.MapFrom(s => DateOnly.FromDateTime(s.BeginingDate)))
+                .ForMember(d => d.ExpiresDate,
+                           opt => opt.MapFrom(s => s.ExpiresDate.HasValue
+                                ? DateOnly.FromDateTime(s.ExpiresDate.Value)
+                                : default));
         }
     }
 }

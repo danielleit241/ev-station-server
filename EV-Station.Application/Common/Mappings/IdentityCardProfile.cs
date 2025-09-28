@@ -11,11 +11,11 @@ namespace EV_Station.Application.Common.Mappings
         {
             CreateMap<IdentityCardRequest, IdentityCard>()
                 .ForMember(d => d.DateOfBirth,
-                            opt => opt.MapFrom(s => DateOnly.FromDateTime(s.DateOfBirth.ToDateTime(TimeOnly.MinValue))))
+                            opt => opt.MapFrom(s => s.DateOfBirth.ToDateTime(TimeOnly.MinValue)))
                 .ForMember(d => d.CreateDate,
-                            opt => opt.MapFrom(s => DateOnly.FromDateTime(s.CreateDate.ToDateTime(TimeOnly.MinValue))))
+                            opt => opt.MapFrom(s => s.CreateDate.ToDateTime(TimeOnly.MinValue)))
                 .ForMember(d => d.DayOfExpiry,
-                            opt => opt.MapFrom(s => DateOnly.FromDateTime(s.DayOfExpiry.ToDateTime(TimeOnly.MinValue))))
+                            opt => opt.MapFrom(s => s.DayOfExpiry.ToDateTime(TimeOnly.MinValue)))
                 .ForMember(d => d.CreatedAt,
                             opt => opt.Ignore());
 
