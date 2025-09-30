@@ -6,17 +6,17 @@ namespace EV_Station.Infrastructure.Services
 {
     public class PasswordService : IPasswordService
     {
-        public string HashPassword(string password)
+
+        private readonly PasswordHasher<User> passwordHasher = new PasswordHasher<User>();
+
+        public string HashPassword(string clientHashedPassword)
         {
-            var hasher = new PasswordHasher<User>();
-            return hasher.HashPassword(null!, password);
+            return passwordHasher.HashPassword(null!, clientHashedPassword);
         }
 
-        public bool VerifyPassword(string password, string hashedPassword)
+        public bool VerifyPassword(string clientHashedPassword, string storedHash)
         {
-            var hasher = new PasswordHasher<User>();
-
-            var result = hasher.VerifyHashedPassword(null!, hashedPassword, password);
+            var result = passwordHasher.VerifyHashedPassword(null!, storedHash, clientHashedPassword);
 
             return result == PasswordVerificationResult.Success;
         }
