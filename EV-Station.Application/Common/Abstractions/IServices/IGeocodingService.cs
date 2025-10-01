@@ -4,6 +4,6 @@ namespace EV_Station.Application.Common.Abstractions.IServices
 {
     public interface IGeocodingService
     {
-        Task<LocationResponse> GetCoordinatesAsync(string address);
+        Task<LocationMarkerResponse> GetCoordinatesAsync(string address);
     }
 }

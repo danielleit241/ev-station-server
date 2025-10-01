@@ -4,6 +4,6 @@ namespace EV_Station.Application.Common.Abstractions.IServices
 {
     public interface IRoutingService
     {
-        public Task<OSRMRoute> GetRouteAsync(LocationResponse oirgin, LocationResponse destination);
+        public Task<OSRMRoute> GetRouteAsync(LocationMarkerResponse oirgin, LocationMarkerResponse destination);
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace EV_Station.Application.RentalLocation.Dtos.Responses
 {
-    public record RouteLocationResponse(
-        LocationResponse UserLocation,
-        LocationResponse RentalLocation,
+    public record RouteResponse(
+        LocationMarkerResponse UserLocation,
+        LocationMarkerResponse RentalLocation,
         double DistanceKm,
         double DurationMinutes,
         Geometry Polyline

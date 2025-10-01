@@ -29,7 +29,7 @@ namespace EV_Station.Infrastructure.Repositories
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "EV-Station-App");
         }
 
-        public async Task<LocationResponse> GetCoordinatesAsync(string address)
+        public async Task<LocationMarkerResponse> GetCoordinatesAsync(string address)
         {
             var url = $"https://nominatim.openstreetmap.org/search?format=json&q={Uri.EscapeDataString(address)}&countrycodes=VN&limit=1";
             var response = await _httpClient.GetFromJsonAsync<List<NominatimResponse>>(url);
@@ -40,7 +40,7 @@ namespace EV_Station.Infrastructure.Repositories
             }
 
             var result = response[0];
-            return new LocationResponse
+            return new LocationMarkerResponse
             (
                 Address: result.DisplayName,
                 Latitude: double.Parse(result.Lat, CultureInfo.InvariantCulture),

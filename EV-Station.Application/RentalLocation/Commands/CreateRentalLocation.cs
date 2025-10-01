@@ -3,7 +3,7 @@ using EV_Station.Application.RentalLocation.Dtos.Requests;
 using EV_Station.Application.RentalLocation.Dtos.Responses;
 using MediatR;
 
-namespace EV_Station.Application.RentalLocation.Queries
+namespace EV_Station.Application.RentalLocation.Commands
 {
-    public record GetRoute(RouteLocationRequest dto) : IRequest<GenericApiResponse<RouteResponse>>;
+    public record CreateRentalLocation(CreateRentalLocationRequest dto) : IRequest<GenericApiResponse<RentalLocationResponse>>;
 }

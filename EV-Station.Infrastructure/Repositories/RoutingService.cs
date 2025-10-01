@@ -12,7 +12,7 @@ namespace EV_Station.Infrastructure.Repositories
             _httpClient = httpClient;
         }
 
-        public async Task<OSRMRoute> GetRouteAsync(LocationResponse origin, LocationResponse destination)
+        public async Task<OSRMRoute> GetRouteAsync(LocationMarkerResponse origin, LocationMarkerResponse destination)
         {
             var url = $"http://router.project-osrm.org/route/v1/driving/{origin.Longitude},{origin.Latitude};{destination.Longitude},{destination.Latitude}?overview=full&geometries=geojson";
 

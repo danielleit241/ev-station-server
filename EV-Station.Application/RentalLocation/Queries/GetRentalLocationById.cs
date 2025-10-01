@@ -4,5 +4,5 @@ using MediatR;
 
 namespace EV_Station.Application.RentalLocation.Queries
 {
-    public record GetRentalLocationMarker(Guid Id) : IRequest<GenericApiResponse<LocationMarkerResponse>>;
+    public record GetRentalLocationById(Guid id) : IRequest<GenericApiResponse<RentalLocationResponse>>;
 }
