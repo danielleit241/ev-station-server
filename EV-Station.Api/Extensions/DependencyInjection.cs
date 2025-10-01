@@ -13,6 +13,7 @@
             builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
             builder.Services.AddScoped<DatabaseSeeder>();
             builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+            builder.Services.AddScoped<IGeocodingService, GeocodingService>();
 
             return builder;
         }

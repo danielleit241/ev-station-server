@@ -5,6 +5,7 @@ namespace EV_Station.Api.Extensions
     {
         public static IHostApplicationBuilder AddApplicationServices(this IHostApplicationBuilder builder)
         {
+            builder.Services.AddHttpClient();
             builder.Services.AddEndpointsApiExplorer();
             SwaggerExtensions.AddSwagger(builder);
 
