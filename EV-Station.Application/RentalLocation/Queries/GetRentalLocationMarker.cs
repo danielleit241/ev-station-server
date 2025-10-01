@@ -1,6 +1,8 @@
-﻿namespace EV_Station.Application.RentalLocation.Queries
+﻿using EV_Station.Application.Common.Responses;
+using EV_Station.Application.RentalLocation.Dtos.Responses;
+using MediatR;
+
+namespace EV_Station.Application.RentalLocation.Queries
 {
-    internal class GetRentalLocationMarker
-    {
-    }
+    public record GetRentalLocationMarker(Guid Id) : IRequest<GenericApiResponse<LocationResponse>>;
 }

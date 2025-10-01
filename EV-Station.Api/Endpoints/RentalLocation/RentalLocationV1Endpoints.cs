@@ -12,10 +12,18 @@ namespace EV_Station.Api.Endpoints.RentalLocation
         {
             var v1 = application.MapGroup("api/v{version:apiVersion}/rental-locations").WithApiVersionSet().HasApiVersion(1, 0);
 
-            v1.MapGet("/routes/find", FindRentalLocationWithUserAddress);
+            v1.MapGet("/routes/{id:guid}", GetRouteMarker);
+            v1.MapGet("/routes/find", GetRouteByRentalAndUserAddress);
         }
 
-        private async Task<Results<Ok<GenericApiResponse<RouteLocationResponse>>, NotFound>> FindRentalLocationWithUserAddress(
+        private async Task<Results<Ok<GenericApiResponse<LocationResponse>>, NotFound>> GetRouteMarker(Guid id, IMediator mediator)
+        {
+            var query = new GetRentalLocationMarker(id);
+            var result = await mediator.Send(query);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<RouteLocationResponse>>, NotFound>> GetRouteByRentalAndUserAddress(
             [AsParameters] RouteLocationRequest request, IMediator mediator)
         {
             var query = new GetRoute(request);
