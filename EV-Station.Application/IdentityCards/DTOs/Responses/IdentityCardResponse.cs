@@ -6,6 +6,7 @@ namespace EV_Station.Application.IdentityCards.DTOs.Responses
     {
         public string CardNumber { get; set; } = default!;
         public string FullName { get; set; } = default!;
+        public string Sex { get; set; } = string.Empty;
         public DateOnly DateOfBirth { get; set; }
         public DateOnly? CreateDate { get; set; }
         public DateOnly? DayOfExpiry { get; set; }
