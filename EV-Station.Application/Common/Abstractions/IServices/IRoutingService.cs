@@ -2,8 +2,8 @@
 
 namespace EV_Station.Application.Common.Abstractions.IServices
 {
-    public interface IGeocodingService
+    public interface IRoutingService
     {
-        Task<LocationResponse> GetCoordinatesAsync(string address);
+        public Task<OSRMRoute> GetRouteAsync(LocationResponse oirgin, LocationResponse destination);
     }
 }

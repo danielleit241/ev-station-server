@@ -14,6 +14,7 @@
             builder.Services.AddScoped<DatabaseSeeder>();
             builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
             builder.Services.AddScoped<IGeocodingService, GeocodingService>();
+            builder.Services.AddScoped<IRoutingService, RoutingService>();
 
             return builder;
         }

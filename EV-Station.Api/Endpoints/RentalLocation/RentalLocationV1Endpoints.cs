@@ -18,7 +18,7 @@ namespace EV_Station.Api.Endpoints.RentalLocation
         private async Task<Results<Ok<GenericApiResponse<RouteLocationResponse>>, NotFound>> FindRentalLocationWithUserAddress(
             [AsParameters] RouteLocationRequest request, IMediator mediator)
         {
-            var query = new GetRouteLocation(request);
+            var query = new GetRoute(request);
             var result = await mediator.Send(query);
 
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();

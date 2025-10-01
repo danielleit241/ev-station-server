@@ -5,5 +5,5 @@ using MediatR;
 
 namespace EV_Station.Application.RentalLocation.Queries
 {
-    public record GetRouteLocation(RouteLocationRequest dto) : IRequest<GenericApiResponse<RouteLocationResponse>>;
+    public record GetRoute(RouteLocationRequest dto) : IRequest<GenericApiResponse<RouteLocationResponse>>;
 }
