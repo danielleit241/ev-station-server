@@ -26,7 +26,7 @@
                 .WithName("Update Driver License")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
-            v1.MapDelete("/{id:Guid}", DeleteDriverLicense)
+            v1.MapDelete("/{licenseNumber}", DeleteDriverLicense)
                 .WithName("Delete Driver License")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
@@ -41,9 +41,9 @@
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Renter" });
         }
 
-        private async Task<Results<Ok<GenericApiResponse<DriverLicenseResponse>>, NotFound>> DeleteDriverLicense(Guid id, [FromBody] string licenseNumber, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<DriverLicenseResponse>>, NotFound>> DeleteDriverLicense(string licenseNumber, IMediator mediator)
         {
-            var deleteDriverLicenseCommand = new DeleteDriverLicense(id, licenseNumber);
+            var deleteDriverLicenseCommand = new DeleteDriverLicense(licenseNumber);
             var result = await mediator.Send(deleteDriverLicenseCommand);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }

@@ -4,5 +4,5 @@ using MediatR;
 
 namespace EV_Station.Application.DriverLisences.Commands
 {
-    public record DeleteDriverLicense(Guid userId, string licenseNumber) : IRequest<GenericApiResponse<DriverLicenseResponse>>;
+    public record DeleteDriverLicense(string licenseNumber) : IRequest<GenericApiResponse<DriverLicenseResponse>>;
 }

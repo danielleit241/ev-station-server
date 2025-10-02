@@ -21,8 +21,7 @@ namespace EV_Station.Application.DriverLisences.CommandHandlers
             var driverLicenseRepository = _uow.DriverLicenses;
 
             var driverLicenses = await driverLicenseRepository.GetAllAsync();
-            var driverLicense = driverLicenses.FirstOrDefault(dl => dl.UserId == request.userId
-                                            && dl.LicenseNumber == request.licenseNumber);
+            var driverLicense = driverLicenses.FirstOrDefault(dl => dl.LicenseNumber == request.licenseNumber);
 
             if (driverLicense == null)
             {
