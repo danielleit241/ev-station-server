@@ -20,7 +20,7 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
         public async Task<GenericApiResponse<IdentityCardResponse>> Handle(DeleteIdentityCard request, CancellationToken cancellationToken)
         {
             var identityCardRepository = _uow.IdentityCards;
-            var identityCard = await identityCardRepository.GetByIdAsync(request.id);
+            var identityCard = await identityCardRepository.GetIdentityCardByNumber(request.cardNumber);
             if (identityCard is null)
             {
                 return GenericApiResponse<IdentityCardResponse>.FailResponse("Không tìm thấy thẻ căn cước công dân");

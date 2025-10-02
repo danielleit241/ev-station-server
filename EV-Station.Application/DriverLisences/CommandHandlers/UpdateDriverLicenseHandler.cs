@@ -43,7 +43,6 @@ namespace EV_Station.Application.DriverLisences.CommandHandlers
 
         private DriverLicense GetUpdatedLicenseCard(DriverLicense existingLicense, DriverLicense updatedLicense)
         {
-            existingLicense.LicenseNumber = updatedLicense.LicenseNumber;
             existingLicense.FullName = updatedLicense.FullName;
             existingLicense.DateOfBirth = updatedLicense.DateOfBirth;
             existingLicense.Nationality = updatedLicense.Nationality;

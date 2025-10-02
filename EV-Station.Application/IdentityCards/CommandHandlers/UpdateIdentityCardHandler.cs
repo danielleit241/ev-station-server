@@ -20,7 +20,7 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
         public async Task<GenericApiResponse<IdentityCardResponse>> Handle(UpdateIdentityCard request, CancellationToken cancellationToken)
         {
             var identityCardRepository = _uow.IdentityCards;
-            var identityCard = await identityCardRepository.GetByIdAsync(request.id);
+            var identityCard = await identityCardRepository.GetByUserIdAsync(request.id);
             if (identityCard == null)
             {
                 return GenericApiResponse<IdentityCardResponse>.FailResponse("Thẻ căn cước không tồn tại.");
@@ -31,16 +31,16 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
                 return GenericApiResponse<IdentityCardResponse>.FailResponse("Không thể cập nhật thẻ căn cước đã được phê duyệt.");
             }
 
-            var updatedIdentityCard = GetUpdateIdentityCard(identityCard, _mapper.Map(request.dto, identityCard));
+            var updatedIdentityCard = GetUpdateIdentityCard(identityCard, _mapper.Map<IdentityCard>(request.dto));
             identityCardRepository.Update(updatedIdentityCard);
             await _uow.SaveChangesAsync(cancellationToken);
+
             var response = _mapper.Map<IdentityCardResponse>(identityCard);
             return GenericApiResponse<IdentityCardResponse>.SuccessResponse(response, "Cập nhật thẻ căn cước thành công.");
         }
 
         private IdentityCard GetUpdateIdentityCard(IdentityCard existingCard, IdentityCard updatedCard)
         {
-            existingCard.CardNumber = updatedCard.CardNumber;
             existingCard.FullName = updatedCard.FullName;
             existingCard.Sex = updatedCard.Sex;
             existingCard.Nationality = updatedCard.Nationality;

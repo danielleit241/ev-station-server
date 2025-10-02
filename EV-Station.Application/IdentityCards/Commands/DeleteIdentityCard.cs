@@ -4,5 +4,5 @@ using MediatR;
 
 namespace EV_Station.Application.IdentityCards.Commands
 {
-    public record DeleteIdentityCard(Guid id) : IRequest<GenericApiResponse<IdentityCardResponse>>;
+    public record DeleteIdentityCard(string cardNumber) : IRequest<GenericApiResponse<IdentityCardResponse>>;
 }

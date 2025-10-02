@@ -5,6 +5,7 @@ namespace EV_Station.Application.Common.Abstractions.IRepositories
 {
     public interface IIdentityCardRepository : IGenericRepository<IdentityCard>
     {
+        Task<IdentityCard> GetByUserIdAsync(Guid id);
         Task<IdentityCard?> GetIdentityCardByNumber(string number);
     }
 }

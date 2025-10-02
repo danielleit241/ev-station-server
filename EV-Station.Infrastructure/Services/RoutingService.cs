@@ -2,7 +2,7 @@
 using EV_Station.Application.RentalLocation.Dtos.Responses;
 using System.Net.Http.Json;
 
-namespace EV_Station.Infrastructure.Repositories
+namespace EV_Station.Infrastructure.Services
 {
     public class RoutingService : IRoutingService
     {

@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 
-namespace EV_Station.Infrastructure.Repositories
+namespace EV_Station.Infrastructure.Services
 {
     public class NominatimResponse
     {

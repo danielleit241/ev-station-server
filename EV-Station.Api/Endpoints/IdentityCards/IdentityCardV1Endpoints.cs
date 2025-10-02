@@ -18,7 +18,7 @@
                .WithName("CreateIdentityCard")
                .RequireAuthorization();
 
-            v1.MapDelete("/{id:Guid}", DeleteIdentityCard)
+            v1.MapDelete("/{cardNumber}", DeleteIdentityCard)
                 .WithName("DeleteIdentityCard")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
@@ -66,9 +66,9 @@
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
-        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> DeleteIdentityCard(Guid id, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> DeleteIdentityCard(string cardNumber, IMediator mediator)
         {
-            var deleteIdentityCardCommand = new DeleteIdentityCard(id);
+            var deleteIdentityCardCommand = new DeleteIdentityCard(cardNumber);
             var result = await mediator.Send(deleteIdentityCardCommand);
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
