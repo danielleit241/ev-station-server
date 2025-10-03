@@ -8,11 +8,11 @@ using MediatR;
 
 namespace EV_Station.Application.IdentityCards.CommandHandlers
 {
-    public class VerifyCardNumberHandler : IRequestHandler<VerifyIdentityCard, GenericApiResponse<IdentityCardResponse>>
+    public class VerifyIdentityCardHandler : IRequestHandler<VerifyIdentityCard, GenericApiResponse<IdentityCardResponse>>
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public VerifyCardNumberHandler(IUnitOfWork uow, IMapper mapper)
+        public VerifyIdentityCardHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;

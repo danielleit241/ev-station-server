@@ -10,9 +10,13 @@
                 .WithName("GetAllIdentityCard")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
 
-            //v1.MapGet("/{cardNumber}", GetIdentityCardByCardNumber)
-            //    .WithName("GetIdentityCardByCardNumber")
-            //    .RequireAuthorization();
+            v1.MapGet("users/{id:Guid}", GetIdentityCardByUserId)
+                .WithName("GetIdentityCardByUserId")
+                .RequireAuthorization();
+
+            v1.MapGet("/{cardNumber}", GetIdentityCardByCardNumber)
+                .WithName("GetIdentityCardByCardNumber")
+                .RequireAuthorization();
 
             v1.MapPost("", CreateIdentityCard)
                .WithName("CreateIdentityCard")
@@ -25,10 +29,6 @@
             v1.MapPut("/{id:Guid}", UpdateIdentityCard)
                 .WithName("UpdateIdentityCard")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
-
-            v1.MapGet("users/{id:Guid}", GetIdentityCardByUserId)
-                .WithName("GetIdentityCardByUserId")
-                .RequireAuthorization();
 
             v1.MapPost("/scan-url", ScanIdentityCardUrl)
                 .WithName("ScanIdentityCardUrl")
@@ -45,12 +45,12 @@
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
         }
 
-        //private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardByCardNumber(string cardNumber, IMediator mediator)
-        //{
-        //    var getIdentityCardByCardNumberQuery = new GetIdentityCardByCardNumber(cardNumber);
-        //    var result = await mediator.Send(getIdentityCardByCardNumberQuery);
-        //    return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
-        //}
+        private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> GetIdentityCardByCardNumber(string cardNumber, IMediator mediator)
+        {
+            var getIdentityCardByCardNumberQuery = new GetIdentityCardByCardNumber(cardNumber);
+            var result = await mediator.Send(getIdentityCardByCardNumberQuery);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
 
         private async Task<Results<Ok<GenericApiResponse<IdentityCardResponse>>, NotFound>> VerifyIdentityCard(string cardNumber, [FromBody] string status, IMediator mediator)
         {
