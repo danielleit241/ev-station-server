@@ -12,15 +12,15 @@
 
             v1.MapGet("users/{id:Guid}", GetIdentityCardByUserId)
                 .WithName("GetIdentityCardByUserId")
-                .RequireAuthorization();
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
             v1.MapGet("/{cardNumber}", GetIdentityCardByCardNumber)
                 .WithName("GetIdentityCardByCardNumber")
-                .RequireAuthorization();
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 
             v1.MapPost("", CreateIdentityCard)
                .WithName("CreateIdentityCard")
-               .RequireAuthorization();
+               .RequireAuthorization(new AuthorizeAttribute { Roles = "Renter" });
 
             v1.MapDelete("/{cardNumber}", DeleteIdentityCard)
                 .WithName("DeleteIdentityCard")
@@ -32,12 +32,12 @@
 
             v1.MapPost("/scan-url", ScanIdentityCardUrl)
                 .WithName("ScanIdentityCardUrl")
-                .RequireAuthorization();
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Renter" });
 
             v1.MapPost("/scan-file", ScanIdentityCardFile)
                 .Accepts<IFormFile>("multipart/form-data")
                 .WithName("ScanIdentityCardFile")
-                .RequireAuthorization()
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Renter" })
                 .DisableAntiforgery();
 
             v1.MapPut("{cardNumber}/verify", VerifyIdentityCard)

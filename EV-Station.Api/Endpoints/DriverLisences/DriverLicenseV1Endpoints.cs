@@ -14,7 +14,7 @@
                 .WithName("Get All Driver License")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin" });
 
-            v1.MapGet("/{id:Guid}", GetListDriverLicenseByUserId)
+            v1.MapGet("users/{id:Guid}", GetListDriverLicenseByUserId)
                 .WithName("Get List Driver License By User Id")
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Staff, Admin, Renter" });
 

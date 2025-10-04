@@ -40,7 +40,7 @@ namespace EV_Station.Api.Endpoints.RentalLocation
             return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
-        private async Task<Results<Ok<GenericApiResponse<RentalLocationResponse>>, NotFound>> CreateRentalLocationAsync([FromBody] CreateRentalLocationRequest dto, IMediator mediator)
+        private async Task<Results<Ok<GenericApiResponse<RentalLocationResponse>>, NotFound>> CreateRentalLocationAsync([FromBody] RentalLocationRequest dto, IMediator mediator)
         {
             var command = new CreateRentalLocation(dto);
             var result = await mediator.Send(command);

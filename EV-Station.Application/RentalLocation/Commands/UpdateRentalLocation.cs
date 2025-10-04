@@ -5,5 +5,5 @@ using MediatR;
 
 namespace EV_Station.Application.RentalLocation.Commands
 {
-    public record CreateRentalLocation(RentalLocationRequest dto) : IRequest<GenericApiResponse<RentalLocationResponse>>;
+    public record UpdateRentalLocation(Guid id, RentalLocationRequest dto) : IRequest<GenericApiResponse<RentalLocationResponse>>;
 }

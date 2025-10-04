@@ -8,7 +8,7 @@ namespace EV_Station.Application.Common.Mappings
     {
         public RentalLocationProfile()
         {
-            CreateMap<CreateRentalLocationRequest, Domain.Models.RentalLocation>()
+            CreateMap<RentalLocationRequest, Domain.Models.RentalLocation>()
                 .ForMember(dest => dest.LocationID, opt => opt.MapFrom(src => Guid.NewGuid()));
 
             CreateMap<UpdateRentalLocationRequest, Domain.Models.RentalLocation>();
