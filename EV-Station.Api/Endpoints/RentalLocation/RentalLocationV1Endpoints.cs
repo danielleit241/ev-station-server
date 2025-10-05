@@ -20,10 +20,33 @@ namespace EV_Station.Api.Endpoints.RentalLocation
                 .WithName("Get Rental Location By Id");
 
             v1.MapPost("", CreateRentalLocationAsync)
-                .WithName("Create Rental Location");
+                .WithName("Create Rental Location")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
+
+            v1.MapPut("{id:guid}", UpdateRentalLocationAsync)
+                .WithName("Update Rental Location")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
+
+            v1.MapDelete("{id:guid}", DeleteRentalLocationAsync)
+                .WithName("Delete Rental Location")
+                .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
 
             v1.MapGet("/routes/{id:guid}", GetRouteMarkerAsync);
             v1.MapGet("/routes/find", GetRouteByRentalAndUserAddressAsync);
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<RentalLocationResponse>>, NotFound>> DeleteRentalLocationAsync(Guid id, IMediator mediator)
+        {
+            var command = new DeleteRentalLocation(id);
+            var result = await mediator.Send(command);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+        }
+
+        private async Task<Results<Ok<GenericApiResponse<RentalLocationResponse>>, NotFound>> UpdateRentalLocationAsync(Guid id, [FromBody] RentalLocationRequest request, IMediator mediator)
+        {
+            var command = new UpdateRentalLocation(id, request);
+            var result = await mediator.Send(command);
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         }
 
         private async Task<Results<Ok<GenericApiResponse<RentalLocationResponse>>, NotFound>> GetRentalLocationByIdAsync(Guid id, IMediator mediator)
