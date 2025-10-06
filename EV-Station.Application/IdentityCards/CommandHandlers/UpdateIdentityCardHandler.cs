@@ -26,6 +26,11 @@ namespace EV_Station.Application.IdentityCards.CommandHandlers
                 return GenericApiResponse<IdentityCardResponse>.FailResponse("Thẻ căn cước không tồn tại.");
             }
 
+            if (identityCard.UserId != request.id)
+            {
+                return GenericApiResponse<IdentityCardResponse>.FailResponse("Người dùng không có quyền cập nhật thẻ căn cước này.");
+            }
+
             if (identityCard.Status == Domain.Models.Enums.VerificationStatus.Verified)
             {
                 return GenericApiResponse<IdentityCardResponse>.FailResponse("Không thể cập nhật thẻ căn cước đã được phê duyệt.");

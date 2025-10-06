@@ -21,10 +21,15 @@ namespace EV_Station.Application.DriverLisences.CommandHandlers
         {
             var driverLicenseRepository = _uow.DriverLicenses;
 
-            var driverLicense = await driverLicenseRepository.GetByIdAsync(request.id);
+            var driverLicense = await driverLicenseRepository.GetDriverLicenseByLinceseNumber(request.dto.LicenseNumber);
             if (driverLicense == null)
             {
                 return GenericApiResponse<DriverLicenseResponse>.FailResponse("Bằng lái xe không tồn tại.");
+            }
+
+            if (driverLicense.UserId != request.id)
+            {
+                return GenericApiResponse<DriverLicenseResponse>.FailResponse("Người dùng không có quyền cập nhật bằng lái xe này.");
             }
 
             if (driverLicense.VerificationStatus == Domain.Models.Enums.VerificationStatus.Verified)
