@@ -2,7 +2,6 @@
 {
 
     public record UpdateUserDto(
-            string? Email,
             string? FullName,
             string? AvatarUrl
         );

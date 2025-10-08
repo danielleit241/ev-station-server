@@ -25,7 +25,7 @@
 
             v1.MapPut("/{id:guid}", UpdateUserAsync)
                 .WithName("UpdateUser")
-                .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
+                .RequireAuthorization();
         }
         private async Task<Results<Ok<GenericApiResponse<UserResponseDto>>, NotFound>> UpdateUserAsync(Guid id, [FromBody] UpdateUserDto dto, IMediator mediator)
         {

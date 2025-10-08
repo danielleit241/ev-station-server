@@ -28,7 +28,7 @@ namespace EV_Station.Application.Users.CommandHandlers
             {
                 return GenericApiResponse<UserResponseDto>.FailResponse("Tài khoản không tồn tại.");
             }
-            user.Email = request.dto.Email ?? user.Email;
+
             user.AvatarUrl = request.dto.AvatarUrl ?? user.AvatarUrl;
             user.FullName = request.dto.FullName ?? user.FullName;
 
